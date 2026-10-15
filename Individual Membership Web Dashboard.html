@@ -1,0 +1,462 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Individual Membership Web Dashboard</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: navy masthead band, then a single 1120px column of scorecard → evidence → plan → actions */
+:root{
+  --navy:#0B2B53; --navy-ink:#0B2B53; --orange:#C9531B; --orange-soft:#F7E3D8;
+  --bg:#F4F5F7; --surface:#FFFFFF; --fg:#18222F; --muted:#5B6675; --line:#DCE0E6; --track:#E7EAEF;
+  --good:#1E7A4C; --good-bg:#E2F2E9; --bad:#B42318; --bad-bg:#FBE6E3; --warn:#9A6200; --warn-bg:#FBF0D9;
+  --info:#28568F; --info-bg:#E3ECF7; --prev:#9AA6B6;
+  --mast-fg:#FFFFFF; --mast-muted:#B9C7DA;
+  --f-display:"Barlow Semi Condensed","Arial Narrow",Arial,sans-serif;
+  --f-body:"Barlow","Segoe UI",Arial,sans-serif;
+  --f-data:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --navy:#0A1F3B; --navy-ink:#9DBBE3; --orange:#F0844D; --orange-soft:#3A2418;
+  --bg:#0F151D; --surface:#17202B; --fg:#E7ECF2; --muted:#9AA6B6; --line:#2A3542; --track:#26313E;
+  --good:#5CC48C; --good-bg:#16301F; --bad:#F2877B; --bad-bg:#3A1A17; --warn:#E6B65A; --warn-bg:#332710;
+  --info:#8EB4E8; --info-bg:#172A42; --prev:#5E6B7B; --mast-fg:#FFFFFF; --mast-muted:#9DB0C8; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --navy:#0A1F3B; --navy-ink:#9DBBE3; --orange:#F0844D; --orange-soft:#3A2418;
+  --bg:#0F151D; --surface:#17202B; --fg:#E7ECF2; --muted:#9AA6B6; --line:#2A3542; --track:#26313E;
+  --good:#5CC48C; --good-bg:#16301F; --bad:#F2877B; --bad-bg:#3A1A17; --warn:#E6B65A; --warn-bg:#332710;
+  --info:#8EB4E8; --info-bg:#172A42; --prev:#5E6B7B; --mast-fg:#FFFFFF; --mast-muted:#9DB0C8; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:15px;line-height:1.5}
+.wrap{max-width:1120px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;line-height:1.15}
+.num{font-variant-numeric:tabular-nums}
+.eyebrow{font-family:var(--f-display);font-weight:600;font-size:12.5px;letter-spacing:.09em;text-transform:uppercase}
+
+/* masthead */
+.mast{background:var(--navy);color:var(--mast-fg);border-bottom:4px solid var(--orange)}
+.mast .wrap{padding-block:28px 26px;display:grid;gap:18px}
+.mast .eyebrow{color:var(--mast-muted)}
+.mast h1{font-size:clamp(28px,4.4vw,42px);font-weight:700}
+.mast-meta{display:flex;flex-wrap:wrap;gap:8px 22px;color:var(--mast-muted);font-size:14px}
+.mast-meta b{color:var(--mast-fg);font-weight:600}
+.brief{display:grid;grid-template-columns:1fr 1.6fr;gap:22px;border-top:1px solid rgba(255,255,255,.18);padding-top:18px}
+.brief p{margin:4px 0 0;color:#DCE5F1;font-size:14.5px;max-width:68ch}
+.brief .eyebrow{color:#F3A57D}
+
+main .wrap{padding-block:28px 48px;display:grid;gap:34px}
+section{display:grid;gap:14px;min-width:0}
+.sec-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;border-bottom:2px solid var(--line);padding-bottom:8px}
+.sec-head h2{font-size:24px;font-weight:700;color:var(--navy-ink)}
+.sec-head .eyebrow{color:var(--orange)}
+.note{color:var(--muted);font-size:13.5px}
+
+/* KPI scorecard */
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px 16px 14px;display:grid;gap:10px;align-content:start;min-width:0}
+.kpi-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.kpi h3{font-size:16px;font-weight:600;color:var(--muted)}
+.kpi .val{font-family:var(--f-display);font-weight:700;font-size:40px;line-height:1;color:var(--fg)}
+.kpi .sub{font-size:13px;color:var(--muted)}
+.kpi .sub b{color:var(--fg);font-weight:600}
+.pill{display:inline-flex;align-items:center;gap:6px;font-family:var(--f-display);font-weight:600;font-size:12.5px;letter-spacing:.04em;text-transform:uppercase;padding:3px 9px;border-radius:999px;white-space:nowrap}
+.pill::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.p-good{color:var(--good);background:var(--good-bg)}
+.p-bad{color:var(--bad);background:var(--bad-bg)}
+.p-warn{color:var(--warn);background:var(--warn-bg)}
+.p-info{color:var(--info);background:var(--info-bg)}
+.meter{position:relative;height:30px;margin-top:2px}
+.meter .trk{position:absolute;left:0;right:0;top:11px;height:8px;background:var(--track);border-radius:4px}
+.meter .band{position:absolute;top:8px;height:14px;background:var(--orange-soft);border:1.5px solid var(--orange);border-radius:3px}
+.meter .tick{position:absolute;top:5px;width:2px;height:20px;background:var(--orange)}
+.meter .prev{position:absolute;top:9px;width:12px;height:12px;margin-left:-6px;border-radius:50%;background:var(--surface);border:2.5px solid var(--prev)}
+.meter .act{position:absolute;top:6px;width:18px;height:18px;margin-left:-9px;border-radius:50%;border:3px solid var(--surface)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--muted)}
+.legend i{display:inline-block;vertical-align:-1px;margin-right:5px}
+.lg-act{width:11px;height:11px;border-radius:50%;background:var(--fg)}
+.lg-prev{width:10px;height:10px;border-radius:50%;border:2px solid var(--prev)}
+.lg-band{width:16px;height:9px;background:var(--orange-soft);border:1.5px solid var(--orange);border-radius:2px}
+
+/* summary Q&A */
+.qa{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;background:var(--surface);border:1px solid var(--line);border-radius:6px}
+.qa div{padding:16px;border-left:1px solid var(--line);min-width:0}
+.qa div:first-child{border-left:0}
+.qa .eyebrow{color:var(--orange);display:block;margin-bottom:6px}
+.qa p{margin:0;font-size:14.5px}
+
+/* panels, tables, charts */
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px;display:grid;gap:10px;min-width:0;align-content:start}
+.panel h3{font-size:18px;font-weight:700;color:var(--navy-ink)}
+.tscroll{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:6px}
+table{border-collapse:collapse;width:100%;font-size:14px;min-width:760px}
+th,td{padding:9px 10px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+thead th{white-space:normal;vertical-align:bottom;font-family:var(--f-display);font-weight:600;font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--bg);border-bottom:2px solid var(--line)}
+tbody tr:last-child td{border-bottom:0}
+tr.total td{font-weight:600;background:var(--bg);border-top:2px solid var(--line)}
+td .was{color:var(--muted);font-size:12.5px;display:block}
+.up{color:var(--good)} .down{color:var(--bad)} .flat{color:var(--muted)}
+.d{font-size:12.5px;font-weight:600}
+code{font-family:var(--f-data);font-size:12.5px}
+td code{color:var(--fg)}
+.hl{background:var(--bad-bg)}
+svg text{font-family:var(--f-body)}
+.chart{width:100%;height:auto;display:block}
+
+/* tactics */
+.tactics{display:grid;gap:10px}
+.tac{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:14px 16px;display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:6px 16px;align-items:start}
+.tac .n{font-family:var(--f-display);font-weight:700;font-size:26px;color:var(--orange);line-height:1}
+.tac h3{font-size:17px;font-weight:700}
+.tac p{margin:2px 0 0;font-size:14px;color:var(--muted);max-width:75ch}
+.tac .meta{font-size:13px;color:var(--muted);margin-top:6px}
+.tac .meta b{color:var(--fg);font-weight:600}
+.tac .right{justify-self:end}
+.result{grid-column:2 / -1;display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.stat{border:1px solid var(--line);border-radius:4px;padding:6px 12px;min-width:120px}
+.stat span{display:block;font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-family:var(--f-display);font-weight:600}
+.stat b{font-family:var(--f-display);font-size:22px;font-weight:700}
+.callout{border-left:4px solid var(--orange);background:var(--surface);padding:12px 16px;border-radius:0 6px 6px 0;font-size:14.5px;border-top:1px solid var(--line);border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+ul.goals{margin:0;padding-left:20px;display:grid;gap:6px}
+
+/* takeaways / recs */
+.cols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}
+ol.list{margin:0;padding:0;list-style:none;counter-reset:i;display:grid;gap:12px}
+ol.list li{counter-increment:i;display:grid;grid-template-columns:30px minmax(0,1fr);gap:10px}
+ol.list li::before{content:counter(i);font-family:var(--f-display);font-weight:700;font-size:15px;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--navy);color:#fff}
+ol.list.recs li::before{background:var(--orange)}
+ol.list b{display:block;font-weight:600}
+ol.list span{font-size:14px;color:var(--muted)}
+.prio{font-family:var(--f-display);font-size:11.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--orange);margin-left:6px}
+footer{border-top:2px solid var(--line);padding-top:14px;font-size:13px;color:var(--muted);display:grid;gap:6px}
+footer p{margin:0;max-width:110ch}
+
+@media (max-width:900px){
+  .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .qa{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .qa div:nth-child(3){border-left:0}
+  .qa div:nth-child(n+3){border-top:1px solid var(--line)}
+  .grid2,.cols,.brief{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:560px){
+  .kpis,.qa{grid-template-columns:minmax(0,1fr)}
+  .qa div{border-left:0;border-top:1px solid var(--line)}
+  .qa div:first-child{border-top:0}
+  .tac{grid-template-columns:34px minmax(0,1fr)}
+  .tac .right{grid-column:2;justify-self:start}
+  .result{grid-column:1 / -1}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<header class="mast">
+  <div class="wrap">
+    <div>
+      <div class="eyebrow">American Welding Society · aws.org · Web Performance Report</div>
+      <h1>Individual Membership Web Section</h1>
+    </div>
+    <div class="mast-meta num">
+      <span>Current period <b>Jul 17 – Oct 14, 2026</b> (90 days)</span>
+      <span>Compared with <b>Apr 18 – Jul 16, 2026</b></span>
+      <span>Pages <b>/membership/individuals/</b> + /member/, /student/, /early-career/</span>
+      <span>Prepared by <b>Miguel Romero</b>, Digital</span>
+    </div>
+    <div class="brief">
+      <div><span class="eyebrow">Channel objective</span><p>Increase individual membership conversions and engagement by enhancing the Membership web section.</p></div>
+      <div><span class="eyebrow">Tactic</span><p>Improve content structure, the user journey and key conversion touchpoints (calls-to-action, benefits messaging, join pathways). Align messaging with user intent, clarify navigation, and reduce friction from first visit through the membership application.</p></div>
+    </div>
+  </div>
+</header>
+
+<main>
+<div class="wrap">
+
+<!-- KPI SCORECARD -->
+<section aria-labelledby="kpi-h">
+  <div class="sec-head"><h2 id="kpi-h">KPI scorecard</h2><span class="eyebrow">Last 90 days vs. plan targets</span></div>
+  <div class="kpis" id="kpis"></div>
+  <div class="legend"><span><i class="lg-act"></i>Current 90 days</span><span><i class="lg-prev"></i>Previous 90 days</span><span><i class="lg-band"></i>Baseline → target range (or target line)</span></div>
+</section>
+
+<!-- SUMMARY -->
+<section aria-labelledby="sum-h">
+  <div class="sec-head"><h2 id="sum-h">Summary</h2><span class="eyebrow">Four questions</span></div>
+  <div class="qa">
+    <div><span class="eyebrow">What happened</span><p>Sessions rose 53% to 15,254 and beat the traffic target. Engagement rate fell to 84.0% and time per user dropped to 0:44, both below plan. Membership purchases rose 50%, while membership revenue fell 5%.</p></div>
+    <div><span class="eyebrow">Why</span><p>Paid campaigns sent 3,077 sessions to the Member page (Google Display 2,260, Paid Social 817). Those visits bounced more and produced 7 purchases. Display produced none. Student sign-ups nearly quadrupled.</p></div>
+    <div><span class="eyebrow">Business impact</span><p>Conversion from Individual, Member and Early Career landings fell from 8.2% to 2.0%, under the 3.5% target. Without paid Display and Social it is 4.3%. Revenue is down $17K because renewals fell $22K.</p></div>
+    <div><span class="eyebrow">What to improve</span><p>Redirect or rebuild the paid landing experience for the Member page. Get approval to launch the benefits redesign and geo-personalization. Push multi-year renewals.</p></div>
+  </div>
+</section>
+
+<!-- PAGE PERFORMANCE -->
+<section aria-labelledby="pg-h">
+  <div class="sec-head"><h2 id="pg-h">Page performance</h2><span class="eyebrow">GA4 · page path, all URL variants combined</span></div>
+  <div class="tscroll">
+    <table class="num">
+      <thead><tr><th>Page</th><th>Sessions</th><th>Engagement rate</th><th>Bounce rate</th><th>Total users</th><th>New users</th><th>Returning users</th><th>Avg. engagement time</th></tr></thead>
+      <tbody id="pg-body"></tbody>
+    </table>
+  </div>
+  <div class="grid2">
+    <div class="panel">
+      <h3>Sessions by page</h3>
+      <div class="legend"><span><i class="lg-act" style="border-radius:2px;background:var(--navy-ink)"></i>Jul 17 – Oct 14</span><span><i class="lg-act" style="border-radius:2px;background:var(--prev)"></i>Apr 18 – Jul 16</span></div>
+      <svg id="ch-sessions" class="chart" viewBox="0 0 520 250" role="img" aria-label="Sessions by page, current versus previous 90 days"></svg>
+    </div>
+    <div class="panel">
+      <h3>Where the Member page traffic came from</h3>
+      <p class="note" style="margin:0">Sessions that landed on /member/, Jul 17 – Oct 14, by channel. Purchases made in those sessions are shown at right.</p>
+      <svg id="ch-channels" class="chart" viewBox="0 0 520 300" role="img" aria-label="Member page landing sessions by channel with purchases"></svg>
+    </div>
+  </div>
+</section>
+
+<!-- CONVERSION -->
+<section aria-labelledby="cv-h">
+  <div class="sec-head"><h2 id="cv-h">Conversion by landing page</h2><span class="eyebrow">Purchases in sessions that started on each page</span></div>
+  <div class="tscroll">
+    <table class="num">
+      <thead><tr><th>Landing page</th><th>Sessions</th><th>Purchases</th><th>Conversion rate</th><th>Prev. sessions</th><th>Prev. purchases</th><th>Prev. rate</th><th>Change</th></tr></thead>
+      <tbody id="cv-body"></tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ECOMMERCE -->
+<section aria-labelledby="ec-h">
+  <div class="sec-head"><h2 id="ec-h">Individual Membership e-commerce</h2><span class="eyebrow">GA4 · item category "Individual Membership", site-wide</span></div>
+  <div class="tscroll">
+    <table class="num">
+      <thead><tr><th>Product group</th><th>Add-to-carts</th><th>Purchases</th><th>Purchases Δ</th><th>Revenue</th><th>Revenue Δ</th></tr></thead>
+      <tbody id="ec-body"></tbody>
+    </table>
+  </div>
+  <p class="note" style="margin:0">Student memberships are recorded at $0 in GA4, so Student growth adds purchases but no revenue. Initiation fees, bundled journals, book offers and translated item names are excluded.</p>
+</section>
+
+<!-- TACTICS -->
+<section aria-labelledby="tc-h">
+  <div class="sec-head"><h2 id="tc-h">Tactics tracker</h2><span class="eyebrow">1 of 4 live</span></div>
+  <div class="callout">Most web tactics are not fully implemented yet. They are waiting on approval and task assignment. In parallel, the team is running a full UX optimization of the Membership menu and page.</div>
+  <div class="tactics">
+    <article class="tac">
+      <div class="n">1</div>
+      <div><h3>UX / Information architecture optimization</h3><p>Optimize the Membership navigation menu so visitors can find the different membership types more easily.</p><div class="meta">Owner <b>Web Team</b> · Deploy <b>Q4 2026</b></div></div>
+      <div class="right"><span class="pill p-info">In progress</span></div>
+    </article>
+    <article class="tac">
+      <div class="n">2</div>
+      <div><h3>Personalization: behavioral targeting</h3><p>Promote Individual Membership content as related content on Certification and Education pages, based on user behavior.</p><div class="meta">Owner <b>Miguel</b> · Deployed <b>July 25</b></div></div>
+      <div class="right"><span class="pill p-good">Implemented</span></div>
+      <div class="result num">
+        <div class="stat"><span>Days running</span><b>71</b></div>
+        <div class="stat"><span>Unique sessions</span><b>4,355</b></div>
+        <div class="stat"><span>Block CTR</span><b>0.34%</b></div>
+        <div class="stat"><span>Est. clicks</span><b>≈15</b></div>
+      </div>
+    </article>
+    <article class="tac">
+      <div class="n">3</div>
+      <div><h3>Personalization: geo-targeting</h3><p>Show geo-localized personalization in states with lower membership penetration to raise awareness and acquisition.</p><div class="meta">Owner <b>Miguel</b> · Planned <b>August 8</b></div></div>
+      <div class="right"><span class="pill p-warn">Awaiting approval</span></div>
+    </article>
+    <article class="tac">
+      <div class="n">4</div>
+      <div><h3>UI/UX design optimization</h3><p>Redesign the Membership page to highlight membership benefits and value more clearly.</p><div class="meta">Owners <b>Anthony / Miguel</b> · Planned <b>August 16</b></div></div>
+      <div class="right"><span class="pill p-warn">Awaiting approval</span></div>
+    </article>
+  </div>
+  <div class="panel">
+    <h3>Goals</h3>
+    <ul class="goals">
+      <li>Optimize the Membership navigation menu to improve usability and make membership types easier to find.</li>
+      <li>Create behavior-based personalizations that promote Individual Membership content on Certification and Education pages as related content.</li>
+      <li>Launch geo-localized personalizations in states with lower membership numbers to increase acquisition there.</li>
+      <li>Redesign the page to present membership benefits more clearly and persuasively.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- TAKEAWAYS / RECS -->
+<section aria-labelledby="tk-h">
+  <div class="sec-head"><h2 id="tk-h">Takeaways and next steps</h2></div>
+  <div class="cols">
+    <div class="panel">
+      <h3>Key takeaways</h3>
+      <ol class="list">
+        <li><div><b>Traffic beat the target, but paid media drove most of the growth.</b><span>15,254 sessions against a 10,122 target. Display and Paid Social sent 3,077 sessions to the Member page and produced 7 purchases.</span></div></li>
+        <li><div><b>The Member page is pulling engagement below plan.</b><span>The other three pages together hold a 91.8% engagement rate, in line with the 91.67% baseline. The Member page's bounce rate went from 5.6% to 24.3%.</span></div></li>
+        <li><div><b>Student growth is strong, but renewals are slipping.</b><span>New Student purchases rose from 615 to 2,332. Renewal revenue fell 10% ($232K to $210K), led by 3-year renewals.</span></div></li>
+      </ol>
+    </div>
+    <div class="panel">
+      <h3>Prioritized recommendations</h3>
+      <ol class="list recs">
+        <li><div><b>Fix the paid landing experience <span class="prio">Priority 1</span></b><span>Review Google Display placements, which sent 2,260 sessions with no purchases. Point paid traffic to /membership/individuals/ or a dedicated join page with plan options and a Join CTA above the fold.</span></div></li>
+        <li><div><b>Unblock Tactics 3 and 4 <span class="prio">Priority 2</span></b><span>Get approval for the benefits redesign and geo-personalization, and finish the menu update. These address the time-on-page and engagement gaps. Retest the related-content block, which has a 0.34% CTR, with stronger offer copy and a higher placement.</span></div></li>
+        <li><div><b>Protect renewal revenue <span class="prio">Priority 3</span></b><span>Promote 3-year renewals in renewal emails and checkout. Turn the Student surge into a Student → Early Career → Individual upgrade path.</span></div></li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p><b>Sources.</b> GA4 property "Google Analytics 4 – aws.org" (403249020), pulled through Windsor.ai on Oct 15, 2026. Personalization results come from Sitecore Personalize.</p>
+  <p><b>Definitions.</b> Engagement rate = engaged sessions ÷ sessions. Bounce rate = 1 − engagement rate. Avg. engagement time = engagement time ÷ total users. Conversion rate = purchases ÷ sessions that landed on Individual, Member or Early Career pages. The page table sums page-level sessions, so a visit to two pages counts on each.</p>
+  <p><b>Data notes.</b> GA4 Advanced Consent Mode went live around Sept 21, 2026, so later sessions are understated and some returning visitors may appear as new. The plan cites 14,895 Individual Membership purchases. GA4 records 5,420 purchases of Individual Membership products site-wide for the same window, so the plan figure likely includes orders processed outside aws.org checkout and should be confirmed with the membership system. GA4 channel rows for the Member page total 4,507 sessions vs. 4,600 in the landing-page total because of GA4 data thresholds.</p>
+</footer>
+
+</div>
+</main>
+
+<script>
+(function(){
+  const fmt=n=>n.toLocaleString('en-US');
+  const mmss=s=>Math.floor(s/60)+':'+String(Math.round(s%60)).padStart(2,'0');
+  const pctD=(a,b)=>{const d=(a-b)/b*100;return {txt:(d>0?'+':'')+d.toFixed(0)+'%',cls:Math.abs(d)<0.5?'flat':(d>0?'up':'down')}};
+
+  /* ---------- KPI cards ---------- */
+  const K=[
+    {name:'Sessions',val:'15,254',status:['Exceeded','p-good'],min:0,max:16000,band:[9122,10122],prev:9939,act:15254,
+     sub:'Target <b>9,122 → 10,122</b> · previous 9,939 (+53%)'},
+    {name:'Avg. time on page',val:'0:44',status:['Below target','p-bad'],min:0,max:90,band:[70,80],prev:71,act:44,
+     sub:'Target <b>1:10 → 1:20</b> · previous 1:11'},
+    {name:'Engagement rate',val:'84.0%',status:['Below target','p-bad'],min:75,max:100,band:[91.67,93.67],prev:91.5,act:84.0,
+     sub:'Target <b>91.67% → 93.67%</b> · previous 91.5%'},
+    {name:'Membership conversion rate',val:'2.0%',status:['Below target','p-bad'],min:0,max:10,line:3.5,prev:8.2,act:2.0,
+     sub:'Target <b>3.5%</b> · previous 8.2% · <b>4.3%</b> without paid Display &amp; Social'}
+  ];
+  const kp=document.getElementById('kpis');
+  K.forEach(k=>{
+    const pos=v=>((v-k.min)/(k.max-k.min)*100).toFixed(2)+'%';
+    const color=k.status[1]==='p-good'?'var(--good)':'var(--bad)';
+    let mark='<div class="trk"></div>';
+    if(k.band) mark+=`<div class="band" style="left:${pos(k.band[0])};width:calc(${pos(k.band[1])} - ${pos(k.band[0])})"></div>`;
+    if(k.line!=null) mark+=`<div class="tick" style="left:${pos(k.line)}"></div>`;
+    mark+=`<div class="prev" style="left:${pos(k.prev)}" title="Previous"></div><div class="act" style="left:${pos(k.act)};background:${color}" title="Current"></div>`;
+    kp.insertAdjacentHTML('beforeend',`<article class="kpi"><div class="kpi-top"><h3>${k.name}</h3><span class="pill ${k.status[1]}">${k.status[0]}</span></div><div class="val num">${k.val}</div><div class="meter" aria-hidden="true">${mark}</div><div class="sub num">${k.sub}</div></article>`);
+  });
+
+  /* ---------- Page table ---------- */
+  // [label, sessions, engaged, users, new, returning, engSeconds] current, previous
+  const P=[
+    ['/membership/individuals/',[3686,3400,3184,2221,1057,144216],[3471,3144,3053,2116,1052,161821]],
+    ['/membership/individuals/member/',[7436,5631,6878,5726,1240,248975],[4127,3896,3585,2327,1396,255199]],
+    ['/membership/individuals/student/',[3619,3334,3026,2546,704,192395],[1704,1487,1495,1165,391,172574]],
+    ['/membership/individuals/early-career/',[513,443,483,346,146,23147],[637,565,590,407,197,33306]]
+  ];
+  const tot=i=>P.reduce((a,r)=>a.map((v,j)=>v+r[i][j]),[0,0,0,0,0,0]);
+  P.push(['Total',tot(1),tot(2)]);
+  const pb=document.getElementById('pg-body');
+  P.forEach(([lab,c,p])=>{
+    const er=c[1]/c[0]*100, er2=p[1]/p[0]*100;
+    const t=c[5]/c[2], t2=p[5]/p[2];
+    const cell=(cur,prv,fmtFn,isPct,invert)=>{
+      let d;
+      if(isPct){const pts=cur-prv;const good=invert?pts<0:pts>0;d={txt:(pts>0?'+':'')+pts.toFixed(1)+' pts',cls:Math.abs(pts)<0.5?'flat':(good?'up':'down')}}
+      else d=pctD(cur,prv);
+      return `<td>${fmtFn(cur)} <span class="d ${d.cls}">${d.txt}</span><span class="was">was ${fmtFn(prv)}</span></td>`;
+    };
+    const isMember=lab.includes('/member/');
+    pb.insertAdjacentHTML('beforeend',`<tr class="${lab==='Total'?'total':''}"><td>${lab==='Total'?'Total':'<code>'+lab+'</code>'}</td>
+      ${cell(c[0],p[0],fmt)}
+      ${cell(er,er2,v=>v.toFixed(1)+'%',true,false)}
+      ${cell(100-er,100-er2,v=>v.toFixed(1)+'%',true,true).replace('<td>',isMember?'<td class="hl">':'<td>')}
+      ${cell(c[2],p[2],fmt)}
+      ${cell(c[3],p[3],fmt)}
+      ${cell(c[4],p[4],fmt)}
+      ${(()=>{const d=pctD(t,t2);return `<td${isMember?' class="hl"':''}>${mmss(t)} <span class="d ${d.cls}">${d.txt}</span><span class="was">was ${mmss(t2)}</span></td>`})()}
+    </tr>`);
+  });
+
+  /* ---------- Conversion table ---------- */
+  const C=[
+    ['/membership/individuals/',743,61,766,72],
+    ['/membership/individuals/member/',4600,46,399,28],
+    ['/membership/individuals/early-career/',111,3,81,2],
+    ['Individual + Member + Early Career',5454,110,1246,102,'sub'],
+    ['  Same, excluding paid Display & Social',2370,103,null,null,'ex'],
+    ['/membership/individuals/student/',1720,522,574,63],
+    ['All four landing pages',7174,632,1820,165,'total']
+  ];
+  const cb=document.getElementById('cv-body');
+  C.forEach(([lab,s,pu,s2,pu2,kind])=>{
+    const r=pu/s*100, r2=s2?pu2/s2*100:null;
+    const ch=r2==null?'<td class="flat">—</td>':(()=>{const pts=r-r2;return `<td class="d ${Math.abs(pts)<0.1?'flat':(pts>0?'up':'down')}">${(pts>0?'+':'')+pts.toFixed(1)} pts</td>`})();
+    const name=lab.startsWith('/')?`<code>${lab}</code>`:lab.trim();
+    const cls=kind==='total'?'total':(kind==='sub'?'total':'');
+    const rateCell=(lab.includes('/member/')||kind==='sub')?`<td class="hl"><b>${r.toFixed(1)}%</b></td>`:`<td><b>${r.toFixed(1)}%</b></td>`;
+    cb.insertAdjacentHTML('beforeend',`<tr class="${cls}"><td${kind==='ex'?' style="padding-left:28px;color:var(--muted)"':''}>${name}</td><td>${fmt(s)}</td><td>${fmt(pu)}</td>${rateCell}<td>${s2?fmt(s2):'—'}</td><td>${pu2!=null?fmt(pu2):'—'}</td><td>${r2!=null?r2.toFixed(1)+'%':'—'}</td>${ch}</tr>`);
+  });
+
+  /* ---------- E-commerce table ---------- */
+  const E=[
+    ['New Individual members (1/2/3-yr, domestic + intl)',2325,2085,1288,1237,137930,132021],
+    ['New Student members',3384,939,2332,615,0,0],
+    ['New Early Career members',118,130,56,65,3080,3575],
+    ['Individual renewals (incl. Retired rate)',5205,5449,1522,1617,210140,232201],
+    ['Student / Early Career / Retired renewals',268,78,211,64,465,685],
+    ['Upgrades',24,37,11,12,999,1426],
+    ['Total',11324,8718,5420,3610,352614,369908]
+  ];
+  const eb=document.getElementById('ec-body');
+  const money=n=>'$'+fmt(n);
+  E.forEach(([lab,a,a2,p,p2,r,r2])=>{
+    const dp=pctD(p,p2), dr=r2?pctD(r,r2):null;
+    eb.insertAdjacentHTML('beforeend',`<tr class="${lab==='Total'?'total':''}"><td>${lab}</td><td>${fmt(a)}<span class="was">was ${fmt(a2)}</span></td><td>${fmt(p)}<span class="was">was ${fmt(p2)}</span></td><td class="d ${dp.cls}">${dp.txt}</td><td>${r?money(r):'$0'}<span class="was">was ${r2?money(r2):'$0'}</span></td><td class="d ${dr?dr.cls:'flat'}">${dr?dr.txt:'—'}</td></tr>`);
+  });
+
+  /* ---------- SVG helpers ---------- */
+  const NS='http://www.w3.org/2000/svg';
+  const el=(svg,tag,attrs,text)=>{const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(text!=null)e.textContent=text;svg.appendChild(e);return e};
+
+  /* Sessions by page: grouped vertical bars */
+  (function(){
+    const svg=document.getElementById('ch-sessions');
+    const data=[['Individuals',3686,3471],['Member',7436,4127],['Student',3619,1704],['Early Career',513,637]];
+    const L=52,R=510,T=16,B=210,max=8000;
+    const y=v=>B-(v/max)*(B-T);
+    [0,2000,4000,6000,8000].forEach(v=>{
+      el(svg,'line',{x1:L,x2:R,y1:y(v),y2:y(v),stroke:'var(--line)','stroke-width':1});
+      el(svg,'text',{x:L-8,y:y(v)+4,'text-anchor':'end','font-size':11,fill:'var(--muted)'},v===0?'0':(v/1000)+'K');
+    });
+    const gw=(R-L)/data.length, bw=34;
+    data.forEach(([lab,c,p],i)=>{
+      const cx=L+gw*i+gw/2;
+      el(svg,'rect',{x:cx-bw-2,y:y(p),width:bw,height:B-y(p),fill:'var(--prev)',rx:2});
+      el(svg,'rect',{x:cx+2,y:y(c),width:bw,height:B-y(c),fill:'var(--navy-ink)',rx:2});
+      el(svg,'text',{x:cx+2+bw/2,y:y(c)-5,'text-anchor':'middle','font-size':11.5,'font-weight':600,fill:'var(--fg)'},fmt(c));
+      el(svg,'text',{x:cx-2-bw/2,y:y(p)-5,'text-anchor':'middle','font-size':10.5,fill:'var(--muted)'},fmt(p));
+      el(svg,'text',{x:cx,y:B+18,'text-anchor':'middle','font-size':12,fill:'var(--fg)'},lab);
+    });
+    el(svg,'line',{x1:L,x2:R,y1:B,y2:B,stroke:'var(--muted)','stroke-width':1});
+  })();
+
+  /* Member landing by channel: horizontal bars */
+  (function(){
+    const svg=document.getElementById('ch-channels');
+    const data=[['Display (Google Ads)',2260,0,true],['Direct',943,13],['Paid Social (FB/IG)',817,7,true],['Organic Search',142,14],['Cross-network',105,2],['Other',99,5],['Organic Social',91,0],['Paid Search',50,5]];
+    const L=138,R=440,T=8,rowH=31,max=2500;
+    const x=v=>L+(v/max)*(R-L);
+    [0,500,1000,1500,2000,2500].forEach(v=>{
+      el(svg,'line',{x1:x(v),x2:x(v),y1:T,y2:T+rowH*data.length,stroke:'var(--line)','stroke-width':1});
+      el(svg,'text',{x:x(v),y:T+rowH*data.length+14,'text-anchor':'middle','font-size':10.5,fill:'var(--muted)'},v===0?'0':fmt(v));
+    });
+    el(svg,'text',{x:R+40,y:T+rowH*data.length+14,'text-anchor':'middle','font-size':10.5,fill:'var(--muted)','font-weight':600},'Purch.');
+    data.forEach(([lab,s,pu,paid],i)=>{
+      const yy=T+rowH*i;
+      el(svg,'text',{x:L-8,y:yy+rowH/2+4,'text-anchor':'end','font-size':12,fill:'var(--fg)','font-weight':paid?600:400},lab);
+      el(svg,'rect',{x:L,y:yy+6,width:Math.max(1.5,x(s)-L),height:rowH-12,fill:paid?'var(--orange)':'var(--navy-ink)',rx:2,opacity:paid?1:.85});
+      el(svg,'text',{x:x(s)+6,y:yy+rowH/2+4,'font-size':11.5,fill:'var(--fg)'},fmt(s));
+      el(svg,'text',{x:R+40,y:yy+rowH/2+4,'text-anchor':'middle','font-size':12.5,'font-weight':700,fill:pu===0?'var(--bad)':'var(--fg)'},String(pu));
+    });
+    const ly=T+rowH*data.length+34;
+    el(svg,'rect',{x:L,y:ly-9,width:12,height:10,fill:'var(--orange)',rx:2});
+    el(svg,'text',{x:L+18,y:ly,'font-size':11,fill:'var(--muted)'},'Paid campaign traffic: 3,077 sessions, 7 purchases');
+  })();
+})();
+</script>
+
+</body></html>
