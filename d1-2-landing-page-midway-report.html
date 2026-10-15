@@ -1,0 +1,424 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>D1.2 Landing Page Midway</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: navy masthead band, then a single 1120px column of scorecard → summary → evidence → revenue → actions (matches the Individual Membership dashboard) */
+:root{
+  --navy:#0B2B53; --navy-ink:#0B2B53; --orange:#C9531B; --orange-soft:#F7E3D8;
+  --bg:#F4F5F7; --surface:#FFFFFF; --fg:#18222F; --muted:#5B6675; --line:#DCE0E6; --track:#E7EAEF;
+  --good:#1E7A4C; --good-bg:#E2F2E9; --bad:#B42318; --bad-bg:#FBE6E3; --warn:#9A6200; --warn-bg:#FBF0D9;
+  --info:#28568F; --info-bg:#E3ECF7; --prev:#9AA6B6;
+  --mast-fg:#FFFFFF; --mast-muted:#B9C7DA; --mast-body:#DCE5F1; --mast-accent:#F3A57D; --tip-bg:#18222F; --tip-fg:#FFFFFF;
+  --f-display:"Barlow Semi Condensed","Arial Narrow",Arial,sans-serif;
+  --f-body:"Barlow","Segoe UI",Arial,sans-serif;
+  --f-data:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --navy:#0A1F3B; --navy-ink:#9DBBE3; --orange:#F0844D; --orange-soft:#3A2418;
+  --bg:#0F151D; --surface:#17202B; --fg:#E7ECF2; --muted:#9AA6B6; --line:#2A3542; --track:#26313E;
+  --good:#5CC48C; --good-bg:#16301F; --bad:#F2877B; --bad-bg:#3A1A17; --warn:#E6B65A; --warn-bg:#332710;
+  --info:#8EB4E8; --info-bg:#172A42; --prev:#5E6B7B; --mast-fg:#FFFFFF; --mast-muted:#9DB0C8; --mast-body:#DCE5F1; --mast-accent:#F3A57D; --tip-bg:#E7ECF2; --tip-fg:#0F151D; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --navy:#0A1F3B; --navy-ink:#9DBBE3; --orange:#F0844D; --orange-soft:#3A2418;
+  --bg:#0F151D; --surface:#17202B; --fg:#E7ECF2; --muted:#9AA6B6; --line:#2A3542; --track:#26313E;
+  --good:#5CC48C; --good-bg:#16301F; --bad:#F2877B; --bad-bg:#3A1A17; --warn:#E6B65A; --warn-bg:#332710;
+  --info:#8EB4E8; --info-bg:#172A42; --prev:#5E6B7B; --mast-fg:#FFFFFF; --mast-muted:#9DB0C8; --mast-body:#DCE5F1; --mast-accent:#F3A57D; --tip-bg:#E7ECF2; --tip-fg:#0F151D; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:15px;line-height:1.5}
+.wrap{max-width:1120px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;line-height:1.15}
+.num{font-variant-numeric:tabular-nums}
+.eyebrow{font-family:var(--f-display);font-weight:600;font-size:12.5px;letter-spacing:.09em;text-transform:uppercase}
+
+.mast{background:var(--navy);color:var(--mast-fg);border-bottom:4px solid var(--orange)}
+.mast .wrap{padding-block:28px 26px;display:grid;gap:18px}
+.mast .eyebrow{color:var(--mast-muted)}
+.mast h1{font-size:clamp(28px,4.4vw,42px);font-weight:700}
+.mast-meta{display:flex;flex-wrap:wrap;gap:8px 22px;color:var(--mast-muted);font-size:14px}
+.mast-meta b{color:var(--mast-fg);font-weight:600}
+.brief{display:grid;grid-template-columns:1fr 1.6fr;gap:22px;border-top:1px solid rgba(255,255,255,.18);padding-top:18px}
+.brief p{margin:4px 0 0;color:var(--mast-body);font-size:14.5px;max-width:68ch}
+.brief .eyebrow{color:var(--mast-accent)}
+
+main .wrap{padding-block:28px 48px;display:grid;gap:34px}
+section{display:grid;gap:14px;min-width:0}
+.sec-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;border-bottom:2px solid var(--line);padding-bottom:8px}
+.sec-head h2{font-size:24px;font-weight:700;color:var(--navy-ink)}
+.sec-head .eyebrow{color:var(--orange)}
+.note{color:var(--muted);font-size:13.5px;margin:0}
+
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px 16px 14px;display:grid;gap:8px;align-content:start;min-width:0}
+.kpi-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;min-height:24px}
+.kpi h3{font-size:16px;font-weight:600;color:var(--muted)}
+.kpi .val{font-family:var(--f-display);font-weight:700;font-size:40px;line-height:1;color:var(--fg)}
+.kpi .sub{font-size:13px;color:var(--muted)}
+.kpi .sub b{color:var(--fg);font-weight:600}
+.share{height:8px;background:var(--track);border-radius:4px;overflow:hidden;display:flex}
+.share span{display:block;height:100%}
+.pill{display:inline-flex;align-items:center;gap:6px;font-family:var(--f-display);font-weight:600;font-size:12.5px;letter-spacing:.04em;text-transform:uppercase;padding:3px 9px;border-radius:999px;white-space:nowrap}
+.pill::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.p-good{color:var(--good);background:var(--good-bg)}
+.p-bad{color:var(--bad);background:var(--bad-bg)}
+.p-warn{color:var(--warn);background:var(--warn-bg)}
+.p-info{color:var(--info);background:var(--info-bg)}
+
+.qa{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));background:var(--surface);border:1px solid var(--line);border-radius:6px}
+.qa div{padding:16px;border-left:1px solid var(--line);min-width:0}
+.qa div:first-child{border-left:0}
+.qa .eyebrow{color:var(--orange);display:block;margin-bottom:6px}
+.qa p{margin:0;font-size:14.5px}
+
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px;display:grid;gap:10px;min-width:0;align-content:start}
+.panel h3{font-size:18px;font-weight:700;color:var(--navy-ink)}
+.tscroll{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:6px}
+table{border-collapse:collapse;width:100%;font-size:14px;min-width:760px}
+table.sm{min-width:560px}
+th,td{padding:9px 10px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+thead th{white-space:normal;vertical-align:bottom;font-family:var(--f-display);font-weight:600;font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--bg);border-bottom:2px solid var(--line)}
+thead th[data-k]{cursor:pointer;user-select:none}
+thead th[data-k]:hover{color:var(--fg)}
+tbody tr:last-child td{border-bottom:0}
+tr.total td{font-weight:600;background:var(--bg);border-top:2px solid var(--line)}
+td .was{color:var(--muted);font-size:12.5px;display:block}
+.up{color:var(--good)} .down{color:var(--bad)} .flat{color:var(--muted)}
+.d{font-size:12.5px;font-weight:600}
+code{font-family:var(--f-data);font-size:12.5px}
+td code{color:var(--fg)}
+.hl{background:var(--bad-bg)}
+.hl-o{background:var(--orange-soft)}
+svg text{font-family:var(--f-body)}
+.chart{width:100%;height:auto;display:block}
+
+.controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+button.chip{font:600 13px var(--f-body);color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:5px 12px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+button.chip:hover{border-color:var(--navy-ink)}
+button.chip[aria-pressed="true"]{background:var(--navy-ink);border-color:var(--navy-ink);color:var(--surface)}
+button:focus-visible{outline:2px solid var(--orange);outline-offset:2px}
+.sw{width:10px;height:10px;border-radius:2px;display:inline-block}
+.chart-box{position:relative;overflow-x:auto}
+.tip{position:absolute;pointer-events:none;background:var(--tip-bg);color:var(--tip-fg);font-size:12.5px;padding:8px 10px;border-radius:5px;line-height:1.4;white-space:nowrap;transform:translate(-50%,-100%);font-variant-numeric:tabular-nums;z-index:2}
+.mini{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:0;border-top:1px solid var(--line);padding-top:10px}
+.mini div{padding:0 10px;border-left:1px solid var(--line);min-width:0}
+.mini div:first-child{border-left:0;padding-left:0}
+.mini span{display:block;font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-family:var(--f-display);font-weight:600}
+.mini b{font-family:var(--f-display);font-size:22px;font-weight:700}
+
+.cta-row{display:grid;grid-template-columns:minmax(0,1fr) 48px;gap:4px 10px;align-items:center;font-size:14px}
+.cta-row .track{grid-column:1/-1;height:10px;background:var(--track);border-radius:4px;overflow:hidden}
+.cta-row .fill{display:block;height:100%;background:var(--orange)}
+.cta-row b{text-align:right;font-family:var(--f-display);font-size:18px}
+.callout{border-left:4px solid var(--orange);background:var(--surface);padding:12px 16px;border-radius:0 6px 6px 0;font-size:14.5px;border-top:1px solid var(--line);border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+.stat-row{display:flex;flex-wrap:wrap;gap:8px}
+.stat{border:1px solid var(--line);border-radius:4px;padding:6px 12px;min-width:120px;background:var(--surface)}
+.stat span{display:block;font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-family:var(--f-display);font-weight:600}
+.stat b{font-family:var(--f-display);font-size:22px;font-weight:700}
+
+.cols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}
+ol.list{margin:0;padding:0;list-style:none;counter-reset:i;display:grid;gap:12px}
+ol.list li{counter-increment:i;display:grid;grid-template-columns:30px minmax(0,1fr);gap:10px}
+ol.list li::before{content:counter(i);font-family:var(--f-display);font-weight:700;font-size:15px;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--navy);color:#fff}
+ol.list.recs li::before{background:var(--orange)}
+ol.list b{display:block;font-weight:600}
+ol.list span{font-size:14px;color:var(--muted)}
+.prio{font-family:var(--f-display);font-size:11.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--orange);margin-left:6px}
+footer{border-top:2px solid var(--line);padding-top:14px;font-size:13px;color:var(--muted);display:grid;gap:6px}
+footer p{margin:0;max-width:110ch}
+
+@media (max-width:900px){
+  .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .qa{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .qa div:nth-child(3){border-left:0}
+  .qa div:nth-child(n+3){border-top:1px solid var(--line)}
+  .grid2,.cols,.brief{grid-template-columns:minmax(0,1fr)}
+  .mini{grid-template-columns:repeat(3,minmax(0,1fr));row-gap:10px}
+  .mini div:nth-child(4){border-left:0;padding-left:0}
+}
+@media (max-width:560px){
+  .kpis,.qa{grid-template-columns:minmax(0,1fr)}
+  .qa div{border-left:0;border-top:1px solid var(--line)}
+  .qa div:first-child{border-top:0}
+  .mini{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .mini div{border-left:0;padding-left:0}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<header class="mast">
+  <div class="wrap">
+    <div>
+      <div class="eyebrow">American Welding Society · aws.org · Web Performance Report · Midway</div>
+      <h1>AWS D1.2/D1.2M:2026 Landing Page</h1>
+    </div>
+    <div class="mast-meta num">
+      <span>Current period <b>Sep 4 – Oct 14, 2026</b> (41 days since launch)</span>
+      <span>Compared with <b>no prior period</b> (new page)</span>
+      <span>Page <b>/standards-and-publications/codes-and-standards/d1-2/</b></span>
+      <span>Prepared by <b>Miguel Romero</b>, Digital</span>
+    </div>
+    <div class="brief">
+      <div><span class="eyebrow">Page purpose</span><p>Launch the new edition of the Structural Welding Code–Aluminum and send code users to order it.</p></div>
+      <div><span class="eyebrow">Launch support</span><p>Four HubSpot email sends (Sep 4, 15, 24 and Oct 2), plus organic search and direct traffic. Paid search and social were minimal, with no dedicated launch campaign. Order and Purchase buttons send visitors to the publications store.</p></div>
+    </div>
+  </div>
+</header>
+
+<main>
+<div class="wrap">
+
+<section aria-labelledby="kpi-h">
+  <div class="sec-head"><h2 id="kpi-h">KPI scorecard</h2><span class="eyebrow">Sep 4 – Oct 14 · launch to date</span></div>
+  <div class="kpis" id="kpis"></div>
+  <p class="note">New page, so there are no previous-period or plan targets yet. These figures become the baseline for the final report.</p>
+</section>
+
+<section aria-labelledby="sum-h">
+  <div class="sec-head"><h2 id="sum-h">Summary</h2><span class="eyebrow">Four questions</span></div>
+  <div class="qa">
+    <div><span class="eyebrow">What happened</span><p>The page drew 1,131 sessions and 1,009 users in 41 days. Launch week brought 543 sessions, 48% of the total. Weekly traffic then stepped down to about 50 sessions.</p></div>
+    <div><span class="eyebrow">Why</span><p>Four HubSpot sends produced 46% of sessions and every traffic peak. Organic search added 29% at 93% engagement and kept arriving between sends. No paid campaign supported the launch.</p></div>
+    <div><span class="eyebrow">Business impact</span><p>Visitors clicked the Order/Purchase buttons 428 times, but GA4 records $0 for the page. The code book checkout runs on a store GA4 can't see, so sales must come from that store.</p></div>
+    <div><span class="eyebrow">What to improve</span><p>Get daily code book sales from the store. Build always-on search traffic. Use the next sends to cross-sell the CWI Aluminum Endorsement and the aluminum seminar.</p></div>
+  </div>
+</section>
+
+<section aria-labelledby="tr-h">
+  <div class="sec-head"><h2 id="tr-h">Daily traffic</h2><span class="eyebrow">Interactive · pick a range, hover a day</span></div>
+  <div class="panel">
+    <div class="controls">
+      <div class="seg" id="ranges"></div>
+      <div class="seg" id="legend"></div>
+    </div>
+    <div class="chart-box" id="chartBox"><svg id="chart" class="chart" role="img" aria-label="Daily sessions, email and other channels"></svg><div class="tip" id="tip" hidden></div></div>
+    <div class="mini num" id="mini"></div>
+    <p class="note" id="rangeNote"></p>
+  </div>
+</section>
+
+<section aria-labelledby="pg-h">
+  <div class="sec-head"><h2 id="pg-h">Page performance</h2><span class="eyebrow">GA4 · page path, both URL variants</span></div>
+  <div class="tscroll">
+    <table class="num">
+      <thead><tr><th>Page</th><th>Sessions</th><th>Engaged sessions</th><th>Engagement rate</th><th>Bounce rate</th><th>Total users</th><th>New users</th><th>Returning users</th><th>Avg. engagement time</th></tr></thead>
+      <tbody id="pg-body"></tbody>
+    </table>
+  </div>
+  <p class="note">The version without a trailing slash is small and bounces at 63%. It looks like a redirect or link issue worth checking.</p>
+</section>
+
+<section aria-labelledby="ch-h">
+  <div class="sec-head"><h2 id="ch-h">Traffic by channel</h2><span class="eyebrow">Sessions that included the D1.2 page</span></div>
+  <div class="grid2">
+    <div class="tscroll" style="align-self:start">
+      <table class="num sm" id="chTable">
+        <thead><tr><th data-k="name">Channel</th><th data-k="s">Sessions</th><th data-k="share">Share</th><th data-k="r">Engagement rate</th><th data-k="n">New users</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <div class="panel">
+      <h3>Where the traffic came from</h3>
+      <p class="note">Email in orange. Organic search is the only large channel that keeps arriving without a send.</p>
+      <svg id="ch-channels" class="chart" viewBox="0 0 520 290" role="img" aria-label="Sessions by channel"></svg>
+    </div>
+  </div>
+  <p class="note">Click a column heading to sort. AI Assistant is ChatGPT. The table sums to 1,136 sessions vs. 1,131 in the page total because of GA4 data thresholds.</p>
+</section>
+
+<section aria-labelledby="cv-h">
+  <div class="sec-head"><h2 id="cv-h">Conversion signals</h2><span class="eyebrow">Purchase intent and visits that started on the page</span></div>
+  <div class="grid2">
+    <div class="panel">
+      <h3>Purchase-button clicks · 428</h3>
+      <div class="cta-row"><span>Order D1.2 2026 Now</span><b>274</b><span class="track"><span class="fill" style="width:100%"></span></span></div>
+      <div class="cta-row"><span>Purchase D1.2/D1.2M:2026</span><b>132</b><span class="track"><span class="fill" style="width:48.2%"></span></span></div>
+      <div class="cta-row"><span>Same buttons in Spanish, Korean, Portuguese, Chinese, German</span><b>22</b><span class="track"><span class="fill" style="width:8%"></span></span></div>
+      <p class="note">About 38 clicks per 100 sessions. These are clicks, not completed orders. The FAQ also drew steady clicks, led by "What is AWS D1.2/D1.2M:2026?" (43) and "What's new" (41).</p>
+    </div>
+    <div class="tscroll" style="align-self:start">
+      <table class="num sm">
+        <thead><tr><th>Landing channel</th><th>Sessions</th><th>Purchases</th><th>Revenue</th></tr></thead>
+        <tbody id="ld-body"></tbody>
+      </table>
+    </div>
+  </div>
+  <p class="note">The landing table counts only visits whose first page was the D1.2 page. The single purchase was a new Affiliate membership (1 year, domestic), not the code book.</p>
+</section>
+
+<section aria-labelledby="ec-h">
+  <div class="sec-head"><h2 id="ec-h">D1.2-related e-commerce</h2><span class="eyebrow">GA4 · site-wide item revenue</span></div>
+  <div class="callout"><b>The D1.2:2026 code book itself is not in GA4.</b> No ecommerce item for it appears in GA4, and the page shows referrals from sam.accuristech.com, so the purchase completes on an external publications store. Code book sales need to come from that store.</div>
+  <div class="tscroll">
+    <table class="num">
+      <thead><tr><th>Product</th><th>Revenue since launch</th><th>Sale dates</th><th>Revenue, 6 weeks before launch</th><th>Linked to the page in GA4?</th></tr></thead>
+      <tbody id="ec-body"></tbody>
+    </table>
+  </div>
+  <p class="note">The six weeks before launch are Jul 25 – Sep 3, 2026. Related products are shown for context; GA4 can't tie them to the D1.2 page.</p>
+</section>
+
+<section aria-labelledby="tk-h">
+  <div class="sec-head"><h2 id="tk-h">Takeaways and next steps</h2></div>
+  <div class="cols">
+    <div class="panel">
+      <h3>Key takeaways</h3>
+      <ol class="list">
+        <li><div><b>Email launched the page.</b><span>Four sends produced 46% of 1,131 sessions and every traffic peak. Between sends the page settles near 10 sessions a day.</span></div></li>
+        <li><div><b>The audience is qualified.</b><span>81.3% engagement overall, 97% for returning visitors and 93% from organic search. Visitors clicked the purchase buttons 428 times.</span></div></li>
+        <li><div><b>Revenue is invisible, not absent.</b><span>The code book sells outside GA4, so the page shows $0 even while it sends buyers to the store. The one tracked order was a $200 Affiliate membership.</span></div></li>
+      </ol>
+    </div>
+    <div class="panel">
+      <h3>Prioritized recommendations</h3>
+      <ol class="list recs">
+        <li><div><b>Close the revenue gap <span class="prio">Priority 1</span></b><span>Get daily D1.2:2026 unit sales from the publications store and line them up with the four send dates and the 428 button clicks. Then add cross-domain tracking or UTM-tagged buy links so orders flow back into GA4.</span></div></li>
+        <li><div><b>Build the always-on baseline <span class="prio">Priority 2</span></b><span>Optimize the page for "D1.2 2026" and "aluminum structural welding code" searches, add FAQ structured data, and test a small branded paid-search campaign during the next send. Fix the no-slash URL variant.</span></div></li>
+        <li><div><b>Cross-sell in the next sends <span class="prio">Priority 3</span></b><span>Target returning and engaged visitors with the CWI Aluminum Endorsement (no sales since launch) and the aluminum seminar. Send a reminder to recipients who didn't click.</span></div></li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p><b>Sources.</b> GA4 property "Google Analytics 4 – aws.org" (403249020), pulled through Windsor.ai on Oct 15, 2026. Button clicks come from the GA4 eventClick event.</p>
+  <p><b>Definitions.</b> Engagement rate = engaged sessions ÷ sessions. Bounce rate = 1 − engagement rate. Avg. engagement time = engagement time ÷ total users. Returning users use GA4's new/returning split; 61 users are unclassified.</p>
+  <p><b>Data notes.</b> GA4 Advanced Consent Mode went live around Sept 21, 2026, so later activity is understated and some returning visitors may appear as new (Sep 22–23 logged zero page views). Two August visits to the URL were pre-launch previews and are excluded. In the daily chart, ranges shorter than the full period add up daily users, so a person who visited on two days counts twice.</p>
+</footer>
+
+</div>
+</main>
+
+<script>
+(function(){
+  const fmt=n=>n.toLocaleString('en-US');
+  const mmss=s=>Math.floor(s/60)+':'+String(Math.round(s%60)).padStart(2,'0');
+  const md=d=>new Date(d+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'});
+  const NS='http://www.w3.org/2000/svg';
+  const el=(svg,tag,attrs,text)=>{const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(text!=null)e.textContent=text;svg.appendChild(e);return e};
+
+  /* ---------- KPI cards ---------- */
+  const K=[
+    {name:'Sessions',val:'1,131',pill:['Launch','p-info'],sub:'Launch week <b>543</b> → latest week <b>50</b>'},
+    {name:'Engaged sessions',val:'919',sub:'<b>81.3%</b> of all sessions'},
+    {name:'Total users',val:'1,009',sub:'Unique users, de-duplicated'},
+    {name:'New users',val:'577',sub:'<b>57%</b> of users were new to aws.org',bar:[[577,'var(--navy-ink)'],[371,'var(--orange)'],[61,'var(--prev)']]},
+    {name:'Returning users',val:'371',sub:'Returning visits were <b>97%</b> engaged',bar:[[371,'var(--orange)'],[638,'var(--track)']]},
+    {name:'Engagement rate',val:'81.3%',pill:['Strong','p-good'],sub:'Organic search <b>93%</b> · email <b>75%</b>'},
+    {name:'Bounce rate',val:'18.7%',pill:['Low','p-good'],sub:'Organic search <b>7%</b> · no-slash URL <b>63%</b>'},
+    {name:'Avg. engagement time',val:'0:36',sub:'Per user · <b>0:32</b> per session'},
+  ];
+  document.getElementById('kpis').innerHTML=K.map(k=>{
+    const bar=k.bar?`<div class="share" aria-hidden="true">${k.bar.map(([v,c])=>`<span style="flex:${v};background:${c}"></span>`).join('')}</div>`:'';
+    return `<article class="kpi"><div class="kpi-top"><h3>${k.name}</h3>${k.pill?`<span class="pill ${k.pill[1]}">${k.pill[0]}</span>`:''}</div><div class="val num">${k.val}</div>${bar}<div class="sub num">${k.sub}</div></article>`}).join('')
+   +`<article class="kpi" style="grid-column:1/-1;background:var(--orange-soft);border-color:var(--orange)"><div class="kpi-top"><h3>Revenue</h3><span class="pill p-warn">Not tracked in GA4</span></div>
+     <div class="stat-row num"><div class="stat"><span>On the D1.2 page</span><b>$0</b></div><div class="stat"><span>Visits that started on it</span><b>$200</b></div><div class="stat"><span>Purchase-button clicks</span><b>428</b></div><div class="stat"><span>Related aluminum items</span><b>$843</b></div></div>
+     <div class="sub">The code book checkout happens on the publications store, outside GA4. The $200 is one new Affiliate membership bought in a visit that started on the page.</div></article>`;
+
+  /* ---------- Page table ---------- */
+  const P=[['/standards-and-publications/codes-and-standards/d1-2/',1115,913,993,561,371,36106],
+           ['/standards-and-publications/codes-and-standards/d1-2',16,6,16,16,0,50],
+           ['Total',1131,919,1009,577,371,36156]];
+  document.getElementById('pg-body').innerHTML=P.map(([lab,s,e,u,n,r,t])=>{
+    const er=e/s*100,tot=lab==='Total',bad=lab.endsWith('d1-2');
+    return `<tr class="${tot?'total':''}"><td>${tot?'Total':'<code>'+lab+'</code>'}</td><td>${fmt(s)}</td><td>${fmt(e)}</td><td${bad?' class="hl"':''}>${er.toFixed(1)}%</td><td${bad?' class="hl"':''}>${(100-er).toFixed(1)}%</td><td>${fmt(u)}</td><td>${fmt(n)}</td><td>${fmt(r)}</td><td>${mmss(t/u)}</td></tr>`}).join('');
+
+  /* ---------- Channels ---------- */
+  const CH=[['Email (HubSpot)',525,392,292],['Organic Search',329,307,138],['Direct',182,137,114],['AI Assistant',29,25,20],['Referral',21,21,1],['Unassigned / other',20,6,2],['Organic Social',16,15,10],['Paid Search',14,14,0]]
+    .map(([name,s,e,n])=>({name,s,e,n,r:e/s,share:s/1136}));
+  let sortK='s',sortDir=-1;
+  function renderTable(){
+    const list=[...CH].sort((a,b)=>(a[sortK]>b[sortK]?1:-1)*sortDir);
+    document.querySelector('#chTable tbody').innerHTML=list.map(c=>{
+      const p=c.r>=.85?'p-good':c.r>=.6?'p-warn':'p-bad';
+      return `<tr${c.name.startsWith('Email')?' class="hl-o"':''}><td>${c.name}</td><td>${fmt(c.s)}</td><td>${(c.share*100).toFixed(0)}%</td><td><span class="pill ${p}">${Math.round(c.r*100)}%</span></td><td>${fmt(c.n)}</td></tr>`}).join('');
+    document.querySelectorAll('#chTable th').forEach(th=>{th.textContent=th.textContent.replace(/ [▲▼]$/,'');if(th.dataset.k===sortK)th.textContent+=sortDir<0?' ▼':' ▲';
+      th.onclick=()=>{const k=th.dataset.k;if(k===sortK)sortDir*=-1;else{sortK=k;sortDir=k==='name'?1:-1}renderTable()}});
+  }
+  renderTable();
+  (function(){
+    const svg=document.getElementById('ch-channels');
+    const L=128,R=440,T=6,rowH=31,max=600,x=v=>L+(v/max)*(R-L);
+    [0,200,400,600].forEach(v=>{el(svg,'line',{x1:x(v),x2:x(v),y1:T,y2:T+rowH*CH.length,stroke:'var(--line)'});el(svg,'text',{x:x(v),y:T+rowH*CH.length+14,'text-anchor':'middle','font-size':10.5,fill:'var(--muted)'},fmt(v))});
+    el(svg,'text',{x:R+42,y:T+rowH*CH.length+14,'text-anchor':'middle','font-size':10.5,fill:'var(--muted)','font-weight':600},'Engaged');
+    CH.forEach((c,i)=>{const yy=T+rowH*i,em=c.name.startsWith('Email');
+      el(svg,'text',{x:L-8,y:yy+rowH/2+4,'text-anchor':'end','font-size':12,fill:'var(--fg)','font-weight':em?600:400},c.name.replace(' (HubSpot)',''));
+      el(svg,'rect',{x:L,y:yy+6,width:Math.max(1.5,x(c.s)-L),height:rowH-12,fill:em?'var(--orange)':'var(--navy-ink)',rx:2,opacity:em?1:.85});
+      el(svg,'text',{x:x(c.s)+6,y:yy+rowH/2+4,'font-size':11.5,fill:'var(--fg)'},fmt(c.s));
+      el(svg,'text',{x:R+42,y:yy+rowH/2+4,'text-anchor':'middle','font-size':12.5,'font-weight':700,fill:c.r<.6?'var(--bad)':'var(--fg)'},Math.round(c.r*100)+'%')});
+  })();
+
+  /* ---------- Landing / conversion ---------- */
+  const LD=[['Email',496,0,0],['Organic Search',222,1,200],['Direct',137,0,0],['AI Assistant',25,0,0],['Organic Social',15,0,0],['Referral',11,0,0],['Unassigned',5,0,0],['Cross-network',2,0,0],['Paid Search',2,0,0],['Total',915,1,200]];
+  document.getElementById('ld-body').innerHTML=LD.map(([l,s,p,r])=>`<tr class="${l==='Total'?'total':''}"><td>${l}</td><td>${fmt(s)}</td><td${p?' class="up"':''}>${p}</td><td>${r?'$'+fmt(r):'$0'}</td></tr>`).join('');
+
+  /* ---------- E-commerce ---------- */
+  const EC=[
+    ['AWS D1.2/D1.2M:2026 code book','Not tracked','—','Not tracked','Sold outside GA4','hl'],
+    ['Affiliate new-member dues (1 yr, domestic)','$200','1 order, in a visit that started on the D1.2 page','—','Yes, by landing page',''],
+    ['Aluminum Welding for Fabricators, Inspectors & Engineers (Oct 5–14)','$749','Sep 18, Sep 23','$0','No',''],
+    ['Aluminum Metallurgy','$94','Oct 8','$188','No',''],
+    ['AWS D1.2 Structural Aluminum Endorsement Exam','$0','None since launch','$890','No','hl']];
+  document.getElementById('ec-body').innerHTML=EC.map(([p,r,d,b,l,h])=>`<tr><td>${p}</td><td${h?' class="'+h+'"':''}><b>${r}</b></td><td>${d}</td><td>${b}</td><td>${l}</td></tr>`).join('');
+
+  /* ---------- Daily chart ---------- */
+  const D=[["2026-09-04",226,150,226,155,255,4360,181],["2026-09-05",90,66,88,58,104,1799,77],["2026-09-06",40,32,40,18,44,825,30],["2026-09-07",26,24,26,16,30,695,14],["2026-09-08",78,71,78,42,101,5920,22],["2026-09-09",48,43,48,19,61,1930,12],["2026-09-10",35,35,35,12,43,1487,2],["2026-09-11",28,25,28,10,31,500,4],["2026-09-12",6,5,6,4,6,174,2],["2026-09-13",7,6,7,3,8,95,1],["2026-09-14",30,27,30,14,33,858,2],["2026-09-15",126,96,126,89,142,4571,65],["2026-09-16",34,30,34,16,37,1195,9],["2026-09-17",34,29,34,14,37,1563,12],["2026-09-18",14,13,14,7,15,217,4],["2026-09-19",8,8,8,6,8,177,0],["2026-09-20",6,5,6,4,7,95,1],["2026-09-21",20,16,20,12,18,478,0],["2026-09-22",6,5,6,2,0,82,0],["2026-09-23",5,4,5,1,0,17,2],["2026-09-24",49,41,49,11,51,1524,35],["2026-09-25",25,20,25,7,31,866,10],["2026-09-26",4,4,4,2,6,106,2],["2026-09-27",0,0,0,0,0,0,0],["2026-09-28",10,9,10,2,15,149,3],["2026-09-29",12,11,12,4,14,171,3],["2026-09-30",13,13,13,2,13,851,1],["2026-10-01",15,13,15,6,20,373,3],["2026-10-02",26,24,25,6,29,2392,15],["2026-10-03",6,6,6,3,6,78,1],["2026-10-04",5,3,5,1,4,14,2],["2026-10-05",13,10,13,2,14,133,4],["2026-10-06",9,9,9,3,10,54,2],["2026-10-07",13,12,13,5,18,244,2],["2026-10-08",12,11,12,7,13,324,0],["2026-10-09",7,6,7,2,10,326,0],["2026-10-10",2,2,2,0,3,65,0],["2026-10-11",1,1,1,0,2,109,1],["2026-10-12",14,11,14,4,23,495,0],["2026-10-13",12,11,11,4,12,265,0],["2026-10-14",14,11,14,4,13,579,1]]
+    .map(r=>({d:r[0],s:r[1],e:r[2],u:r[3],n:r[4],v:r[5],t:r[6],em:Math.min(r[7],r[1])}));
+  const SENDS={"2026-09-04":"Send 1","2026-09-15":"Send 2","2026-09-24":"Send 3","2026-10-02":"Send 4"};
+  const RANGES=[{id:'all',label:'Since launch',from:'2026-09-04',to:'2026-10-14'},{id:'w1',label:'Launch week',from:'2026-09-04',to:'2026-09-10'},{id:'pre',label:'Before Consent Mode',from:'2026-09-04',to:'2026-09-20'},{id:'post',label:'After Consent Mode',from:'2026-09-21',to:'2026-10-14'},{id:'l14',label:'Last 14 days',from:'2026-10-01',to:'2026-10-14'}];
+  const st={range:'all',email:true,other:true};
+  try{const s=localStorage.getItem('d12range');if(RANGES.some(r=>r.id===s))st.range=s}catch(e){}
+  const rows=()=>{const r=RANGES.find(x=>x.id===st.range);return D.filter(x=>x.d>=r.from&&x.d<=r.to)};
+
+  function renderControls(){
+    document.getElementById('ranges').innerHTML=RANGES.map(r=>`<button class="chip" id="rg-${r.id}" data-id="${r.id}" aria-pressed="${st.range===r.id}">${r.label}</button>`).join('');
+    document.querySelectorAll('#ranges button').forEach(b=>b.onclick=()=>{st.range=b.dataset.id;try{localStorage.setItem('d12range',st.range)}catch(e){}renderDaily()});
+    document.getElementById('legend').innerHTML=[['email','Email','var(--orange)'],['other','Other channels','var(--navy-ink)']].map(([k,l,c])=>`<button class="chip" id="lg-${k}" data-k="${k}" aria-pressed="${st[k]}"><span class="sw" style="background:${c}"></span>${l}</button>`).join('');
+    document.querySelectorAll('#legend button').forEach(b=>b.onclick=()=>{const k=b.dataset.k;st[k]=!st[k];if(!st.email&&!st.other)st[k==='email'?'other':'email']=true;renderDaily()});
+  }
+  function renderChart(R){
+    const svg=document.getElementById('chart'),box=document.getElementById('chartBox');
+    while(svg.firstChild)svg.removeChild(svg.firstChild);
+    const W=Math.max(box.clientWidth,560),H=270,m={l:40,r:10,t:28,b:28},iw=W-m.l-m.r,ih=H-m.t-m.b;
+    svg.setAttribute('viewBox',`0 0 ${W} ${H}`);svg.style.minWidth='560px';
+    const val=x=>(st.email?x.em:0)+(st.other?x.s-x.em:0);
+    const max=Math.max(10,...R.map(val)),step=max>150?50:max>60?20:max>25?10:5,top=Math.ceil(max/step)*step;
+    const y=v=>m.t+ih-(v/top)*ih,bw=iw/R.length,gap=Math.min(4,bw*.2);
+    for(let v=0;v<=top;v+=step){el(svg,'line',{x1:m.l,x2:W-m.r,y1:y(v),y2:y(v),stroke:'var(--line)'});el(svg,'text',{x:m.l-6,y:y(v)+4,'text-anchor':'end','font-size':11,fill:'var(--muted)'},v)}
+    const ci=R.findIndex(x=>x.d==='2026-09-21');
+    if(ci>0){const cx=m.l+ci*bw;el(svg,'line',{x1:cx,x2:cx,y1:m.t-10,y2:m.t+ih,stroke:'var(--muted)','stroke-dasharray':'4 4'});el(svg,'text',{x:cx+5,y:m.t-14,'font-size':11,fill:'var(--muted)'},'Consent Mode live (~Sep 21)')}
+    R.forEach((x,i)=>{const bx=m.l+i*bw+gap/2,w=bw-gap,o=st.other?x.s-x.em:0,em=st.email?x.em:0;
+      el(svg,'rect',{x:bx,y:y(o),width:w,height:y(0)-y(o),fill:'var(--navy-ink)',opacity:.85});
+      el(svg,'rect',{x:bx,y:y(o+em),width:w,height:y(o)-y(o+em),fill:'var(--orange)'});
+      if(SENDS[x.d]&&st.email)el(svg,'text',{x:bx+w/2,y:y(o+em)-6,'text-anchor':'middle','font-size':11,'font-weight':600,fill:'var(--orange)'},SENDS[x.d]);
+      const lab=R.length<=14?1:7;if(i%lab===0)el(svg,'text',{x:bx+w/2,y:H-8,'text-anchor':'middle','font-size':11,fill:'var(--muted)'},md(x.d));
+      const hit=el(svg,'rect',{x:m.l+i*bw,y:m.t,width:bw,height:ih,fill:'transparent'});
+      hit.addEventListener('mouseenter',()=>{const tip=document.getElementById('tip');
+        tip.innerHTML=`<b>${md(x.d)}${SENDS[x.d]?' · '+SENDS[x.d]:''}</b><br>${fmt(x.s)} sessions · ${x.s?Math.round(x.e/x.s*100):0}% engaged<br>Email ${x.em} · Other ${x.s-x.em}<br>${fmt(x.n)} new users`;
+        tip.hidden=false;const scale=box.clientWidth/W>1?1:svg.getBoundingClientRect().width/W;const cx=(m.l+i*bw+bw/2)*scale-box.scrollLeft;
+        tip.style.left=Math.min(Math.max(cx,90),box.clientWidth-90)+'px';tip.style.top=Math.max(y(val(x))*scale-6,60)+'px'});
+      hit.addEventListener('mouseleave',()=>{document.getElementById('tip').hidden=true});
+    });
+  }
+  function renderDaily(){
+    renderControls();
+    const R=rows(),sum=k=>R.reduce((a,x)=>a+x[k],0),full=st.range==='all';
+    const s=full?1131:sum('s'),e=full?919:sum('e'),u=full?1009:sum('u'),em=sum('em'),t=full?36156:sum('t');
+    document.getElementById('mini').innerHTML=[
+      ['Sessions',fmt(s)],['Per day',fmt(Math.round(s/R.length))],['Engagement rate',(s?e/s*100:0).toFixed(1)+'%'],
+      ['Email share',(sum('s')?em/sum('s')*100:0).toFixed(0)+'%'],[full?'Total users':'Users (daily sum)',(full?'':'≈')+fmt(u)]]
+      .map(([k,v])=>`<div><span>${k}</span><b>${v}</b></div>`).join('');
+    const r=RANGES.find(x=>x.id===st.range);
+    document.getElementById('rangeNote').textContent=`${md(r.from)} – ${md(r.to)}, 2026 · ${R.length} days. Each orange peak lines up with a HubSpot send.`;
+    renderChart(R);
+  }
+  renderDaily();
+  let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>renderChart(rows()),120)});
+})();
+</script>
+
+</body></html>
