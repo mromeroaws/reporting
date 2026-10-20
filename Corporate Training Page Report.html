@@ -1,0 +1,509 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Corporate Training Page Report</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: navy masthead band, then a single 1120px column of scorecard → summary → trend → page → channels → form check → leads → actions (matches the D1.2 and Individual Membership dashboards) */
+:root{
+  --navy:#0B2B53; --navy-ink:#0B2B53; --orange:#C9531B; --orange-soft:#F7E3D8;
+  --bg:#F4F5F7; --surface:#FFFFFF; --fg:#18222F; --muted:#5B6675; --line:#DCE0E6; --track:#E7EAEF;
+  --good:#1E7A4C; --good-bg:#E2F2E9; --bad:#B42318; --bad-bg:#FBE6E3; --warn:#9A6200; --warn-bg:#FBF0D9;
+  --info:#28568F; --info-bg:#E3ECF7; --prev:#9AA6B6;
+  --mast-fg:#FFFFFF; --mast-muted:#B9C7DA; --mast-body:#DCE5F1; --mast-accent:#F3A57D; --tip-bg:#18222F; --tip-fg:#FFFFFF;
+  --f-display:"Barlow Semi Condensed","Arial Narrow",Arial,sans-serif;
+  --f-body:"Barlow","Segoe UI",Arial,sans-serif;
+  --f-data:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --navy:#0A1F3B; --navy-ink:#9DBBE3; --orange:#F0844D; --orange-soft:#3A2418;
+  --bg:#0F151D; --surface:#17202B; --fg:#E7ECF2; --muted:#9AA6B6; --line:#2A3542; --track:#26313E;
+  --good:#5CC48C; --good-bg:#16301F; --bad:#F2877B; --bad-bg:#3A1A17; --warn:#E6B65A; --warn-bg:#332710;
+  --info:#8EB4E8; --info-bg:#172A42; --prev:#5E6B7B; --mast-fg:#FFFFFF; --mast-muted:#9DB0C8; --mast-body:#DCE5F1; --mast-accent:#F3A57D; --tip-bg:#E7ECF2; --tip-fg:#0F151D; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --navy:#0A1F3B; --navy-ink:#9DBBE3; --orange:#F0844D; --orange-soft:#3A2418;
+  --bg:#0F151D; --surface:#17202B; --fg:#E7ECF2; --muted:#9AA6B6; --line:#2A3542; --track:#26313E;
+  --good:#5CC48C; --good-bg:#16301F; --bad:#F2877B; --bad-bg:#3A1A17; --warn:#E6B65A; --warn-bg:#332710;
+  --info:#8EB4E8; --info-bg:#172A42; --prev:#5E6B7B; --mast-fg:#FFFFFF; --mast-muted:#9DB0C8; --mast-body:#DCE5F1; --mast-accent:#F3A57D; --tip-bg:#E7ECF2; --tip-fg:#0F151D; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:15px;line-height:1.5}
+.wrap{max-width:1120px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;line-height:1.15}
+.num{font-variant-numeric:tabular-nums}
+.eyebrow{font-family:var(--f-display);font-weight:600;font-size:12.5px;letter-spacing:.09em;text-transform:uppercase}
+
+.mast{background:var(--navy);color:var(--mast-fg);border-bottom:4px solid var(--orange)}
+.mast .wrap{padding-block:28px 26px;display:grid;gap:18px}
+.mast .eyebrow{color:var(--mast-muted)}
+.mast h1{font-size:clamp(28px,4.4vw,42px);font-weight:700}
+.mast-meta{display:flex;flex-wrap:wrap;gap:8px 22px;color:var(--mast-muted);font-size:14px}
+.mast-meta b{color:var(--mast-fg);font-weight:600}
+.brief{display:grid;grid-template-columns:1fr 1.6fr;gap:22px;border-top:1px solid rgba(255,255,255,.18);padding-top:18px}
+.brief p{margin:4px 0 0;color:var(--mast-body);font-size:14.5px;max-width:68ch}
+.brief .eyebrow{color:var(--mast-accent)}
+
+main .wrap{padding-block:28px 48px;display:grid;gap:34px}
+section{display:grid;gap:14px;min-width:0}
+.sec-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;border-bottom:2px solid var(--line);padding-bottom:8px}
+.sec-head h2{font-size:24px;font-weight:700;color:var(--navy-ink)}
+.sec-head .eyebrow{color:var(--orange)}
+.note{color:var(--muted);font-size:13.5px;margin:0}
+
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px 16px 14px;display:grid;gap:8px;align-content:start;min-width:0}
+.kpi-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;min-height:24px}
+.kpi h3{font-size:16px;font-weight:600;color:var(--muted)}
+.kpi .val{font-family:var(--f-display);font-weight:700;font-size:40px;line-height:1;color:var(--fg)}
+.kpi .sub{font-size:13px;color:var(--muted)}
+.kpi .sub b{color:var(--fg);font-weight:600}
+.share{height:8px;background:var(--track);border-radius:4px;overflow:hidden;display:flex}
+.share span{display:block;height:100%}
+.pill{display:inline-flex;align-items:center;gap:6px;font-family:var(--f-display);font-weight:600;font-size:12.5px;letter-spacing:.04em;text-transform:uppercase;padding:3px 9px;border-radius:999px;white-space:nowrap}
+.pill::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.p-good{color:var(--good);background:var(--good-bg)}
+.p-bad{color:var(--bad);background:var(--bad-bg)}
+.p-warn{color:var(--warn);background:var(--warn-bg)}
+.p-info{color:var(--info);background:var(--info-bg)}
+
+.qa{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));background:var(--surface);border:1px solid var(--line);border-radius:6px}
+.qa div{padding:16px;border-left:1px solid var(--line);min-width:0}
+.qa div:first-child{border-left:0}
+.qa .eyebrow{color:var(--orange);display:block;margin-bottom:6px}
+.qa p{margin:0;font-size:14.5px}
+
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px;display:grid;gap:10px;min-width:0;align-content:start}
+.panel h3{font-size:18px;font-weight:700;color:var(--navy-ink)}
+.tscroll{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:6px}
+table{border-collapse:collapse;width:100%;font-size:14px;min-width:760px}
+table.sm{min-width:520px}
+th,td{padding:9px 10px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+td.l,th.l{text-align:left}
+td.wrapc{white-space:normal;min-width:200px}
+thead th{white-space:normal;vertical-align:bottom;font-family:var(--f-display);font-weight:600;font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--bg);border-bottom:2px solid var(--line)}
+thead th[data-k]{cursor:pointer;user-select:none}
+thead th[data-k]:hover{color:var(--fg)}
+tbody tr:last-child td{border-bottom:0}
+tr.total td{font-weight:600;background:var(--bg);border-top:2px solid var(--line)}
+td .was{color:var(--muted);font-size:12.5px;display:block}
+.up{color:var(--good)} .down{color:var(--bad)} .flat{color:var(--muted)}
+.d{font-size:12.5px;font-weight:600}
+code{font-family:var(--f-data);font-size:12.5px}
+td code{color:var(--fg)}
+.hl{background:var(--bad-bg)}
+.hl-o{background:var(--orange-soft)}
+.hl-g{background:var(--good-bg)}
+svg text{font-family:var(--f-body)}
+.chart{width:100%;height:auto;display:block}
+
+.controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+button.chip{font:600 13px var(--f-body);color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:5px 12px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+button.chip:hover{border-color:var(--navy-ink)}
+button.chip[aria-pressed="true"]{background:var(--navy-ink);border-color:var(--navy-ink);color:var(--surface)}
+button:focus-visible{outline:2px solid var(--orange);outline-offset:2px}
+.sw{width:10px;height:10px;border-radius:2px;display:inline-block}
+.sw.dot{border-radius:50%}
+.chart-box{position:relative;overflow-x:auto}
+.tip{position:absolute;pointer-events:none;background:var(--tip-bg);color:var(--tip-fg);font-size:12.5px;padding:8px 10px;border-radius:5px;line-height:1.4;white-space:nowrap;transform:translate(-50%,-100%);font-variant-numeric:tabular-nums;z-index:2}
+.mini{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:0;border-top:1px solid var(--line);padding-top:10px}
+.mini div{padding:0 10px;border-left:1px solid var(--line);min-width:0}
+.mini div:first-child{border-left:0;padding-left:0}
+.mini span{display:block;font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-family:var(--f-display);font-weight:600}
+.mini b{font-family:var(--f-display);font-size:22px;font-weight:700}
+
+.cta-row{display:grid;grid-template-columns:minmax(0,1fr) 64px;gap:4px 10px;align-items:center;font-size:14px}
+.cta-row .track{grid-column:1/-1;height:10px;background:var(--track);border-radius:4px;overflow:hidden;display:flex;gap:2px}
+.cta-row .fill{display:block;height:100%;background:var(--orange)}
+.cta-row .fill.p{background:var(--prev)}
+.cta-row b{text-align:right;font-family:var(--f-display);font-size:18px}
+.cta-row b small{font-size:13px;color:var(--muted);font-weight:600}
+.callout{border-left:4px solid var(--orange);background:var(--surface);padding:12px 16px;border-radius:0 6px 6px 0;font-size:14.5px;border-top:1px solid var(--line);border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+.stat-row{display:flex;flex-wrap:wrap;gap:8px}
+.stat{border:1px solid var(--line);border-radius:4px;padding:6px 12px;min-width:120px;background:var(--surface)}
+.stat span{display:block;font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-family:var(--f-display);font-weight:600}
+.stat b{font-family:var(--f-display);font-size:22px;font-weight:700}
+.stat b small{font-size:13px;color:var(--muted);font-weight:600}
+
+.cols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}
+ol.list{margin:0;padding:0;list-style:none;counter-reset:i;display:grid;gap:12px}
+ol.list li{counter-increment:i;display:grid;grid-template-columns:30px minmax(0,1fr);gap:10px}
+ol.list li::before{content:counter(i);font-family:var(--f-display);font-weight:700;font-size:15px;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--navy);color:#fff}
+ol.list.recs li::before{background:var(--orange)}
+ol.list b{display:block;font-weight:600}
+ol.list span{font-size:14px;color:var(--muted)}
+.prio{font-family:var(--f-display);font-size:11.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--orange);margin-left:6px}
+footer{border-top:2px solid var(--line);padding-top:14px;font-size:13px;color:var(--muted);display:grid;gap:6px}
+footer p{margin:0;max-width:110ch}
+
+@media (max-width:900px){
+  .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .qa{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .qa div:nth-child(3){border-left:0}
+  .qa div:nth-child(n+3){border-top:1px solid var(--line)}
+  .grid2,.cols,.brief{grid-template-columns:minmax(0,1fr)}
+  .mini{grid-template-columns:repeat(3,minmax(0,1fr));row-gap:10px}
+  .mini div:nth-child(4){border-left:0;padding-left:0}
+}
+@media (max-width:560px){
+  .kpis,.qa{grid-template-columns:minmax(0,1fr)}
+  .qa div{border-left:0;border-top:1px solid var(--line)}
+  .qa div:first-child{border-top:0}
+  .mini{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .mini div{border-left:0;padding-left:0}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<header class="mast">
+  <div class="wrap">
+    <div>
+      <div class="eyebrow">American Welding Society · aws.org · Web Performance Report · Period over period</div>
+      <h1>Corporate Training Solutions Page</h1>
+    </div>
+    <div class="mast-meta num">
+      <span>Current period <b>Mar 1 – Oct 20, 2026</b> (234 days)</span>
+      <span>Compared with <b>Jul 10, 2025 – Feb 28, 2026</b> (234 days)</span>
+      <span>Page <b>/businesses/connect-with-our-sales-team/corporate-training-solutions/</b></span>
+      <span>Prepared by <b>Miguel Romero</b>, Digital</span>
+    </div>
+    <div class="brief">
+      <div><span class="eyebrow">Page purpose</span><p>Turn companies looking for custom welding training into proposal requests through the HubSpot form “Corporate-Training-Solutions - Custom Seminars”.</p></div>
+      <div><span class="eyebrow">What changed between periods</span><p>The page moved from /businesses/corporate-training-solutions/ on Mar 10, 2026 and launched with a new form (the old page used “Custom Seminar Inquiry”). Paid social ran continuously Jul–Dec 2025, stopped Jan 1, and returned as one burst Jul 29 – Aug 28, 2026.</p></div>
+    </div>
+  </div>
+</header>
+
+<main>
+<div class="wrap">
+
+<section aria-labelledby="kpi-h">
+  <div class="sec-head"><h2 id="kpi-h">KPI scorecard</h2><span class="eyebrow">Current vs. previous 234 days</span></div>
+  <div class="kpis" id="kpis"></div>
+  <p class="note">Traffic is GA4 for both URLs and all case and slash variants. Form submissions come from HubSpot.</p>
+</section>
+
+<section aria-labelledby="sum-h">
+  <div class="sec-head"><h2 id="sum-h">Summary</h2><span class="eyebrow">Four questions</span></div>
+  <div class="qa">
+    <div><span class="eyebrow">What happened</span><p>Sessions fell 37% to 5,081, but HubSpot form submissions rose from 7 to 11. The lead rate went from 0.09% to 0.22% of sessions.</p></div>
+    <div><span class="eyebrow">Why</span><p>Paid social was 93–95% of landing traffic in both periods and is the whole traffic drop. Leads came from organic search, AI assistants, direct and email-matched contacts.</p></div>
+    <div><span class="eyebrow">Business impact</span><p>About 1.4 proposal requests a month, 7 of 11 from business domains including Komatsu, Tesla and Smith+Nephew. None has a HubSpot deal yet, so revenue can't be measured.</p></div>
+    <div><span class="eyebrow">What to improve</span><p>Retarget or pause paid social, grow search and AI visibility for code-specific training, and route every submission into a deal so the next report shows pipeline.</p></div>
+  </div>
+</section>
+
+<section aria-labelledby="tr-h">
+  <div class="sec-head"><h2 id="tr-h">Monthly traffic and leads</h2><span class="eyebrow">Interactive · pick a metric, hover a month</span></div>
+  <div class="panel">
+    <div class="controls">
+      <div class="seg" id="metrics"></div>
+      <div class="seg" id="legend"></div>
+    </div>
+    <div class="chart-box" id="chartBox"><svg id="chart" class="chart" role="img" aria-label="Monthly traffic with HubSpot form submissions"></svg><div class="tip" id="tip" hidden></div></div>
+    <div class="mini num" id="mini"></div>
+    <p class="note">Gray bars are the previous period, blue the current one. Orange dots are HubSpot submissions. Jul 2025 (from Jul 10) and Oct 2026 (to Oct 20) are partial months.</p>
+  </div>
+</section>
+
+<section aria-labelledby="pg-h">
+  <div class="sec-head"><h2 id="pg-h">Page performance</h2><span class="eyebrow">GA4 · both URLs and all path variants</span></div>
+  <div class="tscroll">
+    <table class="num">
+      <thead><tr><th>Period</th><th>Views</th><th>Sessions</th><th>Engaged sessions</th><th>Engagement rate</th><th>Bounce rate</th><th>Total users</th><th>New users</th><th>Avg. engagement time</th></tr></thead>
+      <tbody id="pg-body"></tbody>
+    </table>
+  </div>
+  <p class="note">Engagement time is low in both periods because paid-social visits rarely stay. Outside the Jul–Aug burst, current-period visits are far more engaged (59% in Mar–Jun).</p>
+</section>
+
+<section aria-labelledby="ch-h">
+  <div class="sec-head"><h2 id="ch-h">Traffic by channel</h2><span class="eyebrow">GA4 · sessions that landed on the page</span></div>
+  <div class="grid2">
+    <div class="tscroll" style="align-self:start">
+      <table class="num sm" id="chTable">
+        <thead><tr><th data-k="name">Channel</th><th data-k="p">Previous</th><th data-k="c">Current</th><th data-k="chg">Change</th><th data-k="r">Engagement rate</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <div class="panel">
+      <div class="controls"><h3>Landing sessions, previous vs. current</h3>
+        <div class="seg"><button class="chip" id="psToggle" aria-pressed="false">Include paid social</button></div></div>
+      <svg id="ch-channels" class="chart" role="img" aria-label="Landing sessions by channel"></svg>
+      <p class="note">Paid social is hidden by default: its 7,480 and 4,539 sessions flatten every other bar.</p>
+    </div>
+  </div>
+  <p class="note">Click a column heading to sort. Engagement rate is for the current period. AI Assistant is ChatGPT. Other combines Organic Video, Referral, Unassigned, Display, Paid Search and Organic Shopping.</p>
+</section>
+
+<section aria-labelledby="fm-h">
+  <div class="sec-head"><h2 id="fm-h">Form submission check</h2><span class="eyebrow">HubSpot vs. GA4</span></div>
+  <div class="callout"><b>The current count is validated.</b> HubSpot's “Corporate-Training-Solutions - Custom Seminars” form and both GA4 events agree month by month: 2, 1, 1, 2, 3 and 2, for 11. The form launched with the new page; its first submission was Apr 19, 2026. The previous period is measured on the old page's form, “Custom Seminar Inquiry”.</div>
+  <div class="grid2">
+    <div class="panel">
+      <h3>Submissions by month</h3>
+      <svg id="recon" class="chart" role="img" aria-label="GA4 key event versus HubSpot submissions by month"></svg>
+      <div class="seg"><span class="note" style="display:inline-flex;gap:14px"><span><span class="sw" style="background:var(--prev)"></span> GA4 key event</span><span><span class="sw" style="background:var(--orange)"></span> HubSpot form</span></span></div>
+    </div>
+    <div class="tscroll" style="align-self:start">
+      <table class="num sm">
+        <thead><tr><th>Measure</th><th>Previous</th><th>Current</th></tr></thead>
+        <tbody>
+          <tr class="hl-o"><td>HubSpot form submissions</td><td>7</td><td>11</td></tr>
+          <tr><td>GA4 <code>form_submission_corporate_training</code></td><td>9</td><td>11</td></tr>
+          <tr><td>GA4 <code>contact_sales_form_submit</code></td><td>—</td><td>11</td></tr>
+          <tr><td>GA4 event fired site-wide</td><td class="hl">722</td><td>11</td></tr>
+          <tr><td>Lead rate (HubSpot ÷ sessions)</td><td>0.09%</td><td>0.22%</td></tr>
+          <tr><td>Business email domain</td><td>6 of 7</td><td>7 of 11</td></tr>
+          <tr><td>Deals associated in HubSpot</td><td>0</td><td>0</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <p class="note">The previous-period gap is January: GA4 counted 4, HubSpot 2. HubSpot shows no submissions in Jul–Aug 2025, so GA4 was not missing leads then. The 722 site-wide hits come from a misconfigured trigger in Aug–Sep 2025 that fired on 70+ unrelated pages, fixed by October.</p>
+</section>
+
+<section aria-labelledby="ld-h">
+  <div class="sec-head"><h2 id="ld-h">Lead quality and sources</h2><span class="eyebrow">HubSpot contacts who submitted the form</span></div>
+  <div class="grid2">
+    <div class="panel">
+      <h3>Original source · current <span style="color:var(--orange)">■</span> vs. previous <span style="color:var(--prev)">■</span></h3>
+      <div id="src"></div>
+      <p class="note">Two current leads link to the “corporate campaign” UTM, both from personal Gmail addresses: one as original source (counted here as Campaign UTM), one as latest source.</p>
+    </div>
+    <div class="panel">
+      <h3>What the leads look like</h3>
+      <div class="stat-row num">
+        <div class="stat"><span>Business email</span><b>64% <small>vs 86%</small></b></div>
+        <div class="stat"><span>From AI assistants</span><b>2 <small>vs 0</small></b></div>
+        <div class="stat"><span>New to HubSpot</span><b>9 <small>vs 3</small></b></div>
+        <div class="stat"><span>Deals</span><b>0 <small>vs 0</small></b></div>
+      </div>
+      <p class="note">Current organizations include Komatsu, Tesla, Smith+Nephew, Florence Copper, Pearse Bertram, WJE and Origin Engineering. More leads are now first-time contacts, while last period's mostly came from existing contacts reached through email and imports.</p>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="controls"><h3 id="lt">Submissions</h3><div class="seg" id="periods"></div></div>
+    <div class="tscroll" style="border:0">
+      <table class="num sm">
+        <thead><tr><th>Date</th><th class="l">Organization</th><th class="l">Email</th><th class="l">HubSpot source</th><th class="l">Detail</th></tr></thead>
+        <tbody id="leads"></tbody>
+      </table>
+    </div>
+    <p class="note">Organization is taken from the email domain; personal names are left out. HubSpot is read through each contact's first and most recent conversion, so counts are a minimum.</p>
+  </div>
+</section>
+
+<section aria-labelledby="tk-h">
+  <div class="sec-head"><h2 id="tk-h">Takeaways and next steps</h2></div>
+  <div class="cols">
+    <div class="panel">
+      <h3>Key takeaways</h3>
+      <ol class="list">
+        <li><div><b>More leads from less traffic.</b><span>11 HubSpot submissions vs. 7 on 37% fewer sessions. The lead rate rose 2.5× to 0.22%, and 8 of 11 came in months without paid social.</span></div></li>
+        <li><div><b>Intent channels convert; reach doesn't.</b><span>Organic search and AI assistants produced 6 of 11 leads. Paid social's 12,019 sessions over both periods produced 2 personal-email leads.</span></div></li>
+        <li><div><b>Tracking now agrees.</b><span>GA4 and HubSpot match exactly this period. The new form and the Aug–Sep 2025 GA4 misfire explain last period's differences.</span></div></li>
+      </ol>
+    </div>
+    <div class="panel">
+      <h3>Prioritized recommendations</h3>
+      <ol class="list recs">
+        <li><div><b>Retarget or pause paid social <span class="prio">Priority 1</span></b><span>Optimize any future corporate campaign for the form key event, target B2B job titles (QA, welding and plant managers), or move the budget to LinkedIn and paid search on “corporate welding training”.</span></div></li>
+        <li><div><b>Grow search and AI visibility <span class="prio">Priority 2</span></b><span>Add FAQ and program content for code-specific seminars (D1.1, API 1104, ASME IX) and restore a recurring email to corporate contacts, the channel that fed most of last period's leads.</span></div></li>
+        <li><div><b>Connect leads to revenue <span class="prio">Priority 3</span></b><span>Create a deal or sales-qualified stage for every submission so the next report can show pipeline and revenue, and prompt for a business email on the form.</span></div></li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p><b>Sources.</b> GA4 property “Google Analytics 4 – aws.org” (403249020), pulled through Windsor.ai on Oct 20, 2026. HubSpot portal 7723471 contacts whose first or most recent conversion is one of the two corporate training forms.</p>
+  <p><b>Definitions.</b> Engagement rate = engaged sessions ÷ sessions. Bounce rate = 1 − engagement rate. Avg. engagement time = engagement time ÷ total users. Lead rate = HubSpot submissions ÷ page sessions. Channel figures use the session's landing page, so they cover 7,881 and 4,867 sessions rather than every page session.</p>
+  <p><b>Data notes.</b> GA4 Advanced Consent Mode went live around Sept 21, 2026, so Sep–Oct 2026 activity is understated. The previous period starts Jul 10, 2025, so July is partial; October 2026 runs to the 20th.</p>
+</footer>
+
+</div>
+</main>
+
+<script>
+(function(){
+  const fmt=n=>n.toLocaleString('en-US');
+  const NS='http://www.w3.org/2000/svg';
+  const el=(svg,tag,attrs,text)=>{const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(text!=null)e.textContent=text;svg.appendChild(e);return e};
+  const dl=(c,p)=>{const v=(c-p)/p*100;return `<span class="d ${v>=0?'up':'down'}">${v>=0?'▲':'▼'} ${Math.abs(v).toFixed(0)}%</span>`};
+
+  /* ---------- KPI cards ---------- */
+  const K=[
+    {name:'Sessions',val:'5,081',pill:['Down','p-bad'],sub:'vs <b>8,121</b> '+dl(5081,8121)},
+    {name:'Engaged sessions',val:'1,695',sub:'vs <b>2,507</b> '+dl(1695,2507)},
+    {name:'Engagement rate',val:'33.4%',pill:['Up','p-good'],sub:'vs <b>30.9%</b> <span class="d up">▲ 2.5 pts</span>'},
+    {name:'Bounce rate',val:'66.6%',sub:'vs <b>69.1%</b> <span class="d up">▼ 2.5 pts</span>'},
+    {name:'Total users',val:'4,860',sub:'vs <b>8,055</b> '+dl(4860,8055)},
+    {name:'New users',val:'4,664',sub:'<b>96%</b> of users were new',bar:[[4664,'var(--navy-ink)'],[196,'var(--orange)']]},
+    {name:'Paid social share',val:'93%',pill:['Dominant','p-warn'],sub:'of landing sessions · was <b>95%</b>',bar:[[4539,'var(--orange)'],[328,'var(--track)']]},
+    {name:'Non-paid-social sessions',val:'328',sub:'vs <b>401</b> '+dl(328,401)},
+  ];
+  document.getElementById('kpis').innerHTML=K.map(k=>{
+    const bar=k.bar?`<div class="share" aria-hidden="true">${k.bar.map(([v,c])=>`<span style="flex:${v};background:${c}"></span>`).join('')}</div>`:'';
+    return `<article class="kpi"><div class="kpi-top"><h3>${k.name}</h3>${k.pill?`<span class="pill ${k.pill[1]}">${k.pill[0]}</span>`:''}</div><div class="val num">${k.val}</div>${bar}<div class="sub num">${k.sub}</div></article>`}).join('')
+   +`<article class="kpi" style="grid-column:1/-1;background:var(--orange-soft);border-color:var(--orange)"><div class="kpi-top"><h3>Form submissions · Corporate-Training-Solutions - Custom Seminars</h3><span class="pill p-good">Validated in HubSpot</span></div>
+     <div class="stat-row num"><div class="stat"><span>HubSpot submissions</span><b>11 <small>vs 7</small></b></div><div class="stat"><span>Change</span><b class="up">+57%</b></div><div class="stat"><span>Lead rate</span><b>0.22% <small>vs 0.09%</small></b></div><div class="stat"><span>Business-email leads</span><b>7 <small>vs 6</small></b></div><div class="stat"><span>Deals created</span><b>0 <small>vs 0</small></b></div></div>
+     <div class="sub">GA4 counts the same 11 this period. The previous period is the old page's “Custom Seminar Inquiry” form; GA4 counted 9 there against HubSpot's 7.</div></article>`;
+
+  /* ---------- Monthly data ---------- */
+  const M=[["Jul","2025",1456,970,964,295],["Aug","2025",2003,1349,1332,450],["Sep","2025",1483,1047,1041,352],["Oct","2025",2250,1555,1545,437],["Nov","2025",2151,1323,1316,390],["Dec","2025",2460,1604,1595,395],["Jan","2026",1032,215,205,151],["Feb","2026",157,58,57,37],
+           ["Mar","2026",123,74,64,53],["Apr","2026",77,67,57,44],["May","2026",94,83,81,34],["Jun","2026",95,90,82,55],["Jul","2026",1161,1101,1091,222],["Aug","2026",4366,3583,3408,1220],["Sep","2026",70,62,57,47],["Oct","2026",26,21,20,20]]
+    .map((r,i)=>({m:r[0],y:r[1],views:r[2],sessions:r[3],users:r[4],engaged:r[5],cur:i>=8}));
+  const HS=[0,0,1,0,1,1,2,2,0,2,0,1,1,2,3,2], GA=[0,0,1,0,1,1,4,2,0,2,0,1,1,2,3,2];
+  M.forEach((x,i)=>{x.hs=HS[i];x.ga=GA[i]});
+  const METRICS=[{id:'sessions',label:'Sessions'},{id:'users',label:'Users'},{id:'engaged',label:'Engaged sessions'},{id:'views',label:'Views'}];
+  const st={metric:'sessions',prev:true,cur:true,leads:true,period:'cur',ps:false,sortK:'c',sortDir:-1};
+  try{const s=localStorage.getItem('ctMetric');if(METRICS.some(m=>m.id===s))st.metric=s}catch(e){}
+
+  function renderControls(){
+    document.getElementById('metrics').innerHTML=METRICS.map(m=>`<button class="chip" id="mt-${m.id}" data-id="${m.id}" aria-pressed="${st.metric===m.id}">${m.label}</button>`).join('');
+    document.querySelectorAll('#metrics button').forEach(b=>b.onclick=()=>{st.metric=b.dataset.id;try{localStorage.setItem('ctMetric',st.metric)}catch(e){}renderTrend()});
+    document.getElementById('legend').innerHTML=[['prev','Previous','var(--prev)',''],['cur','Current','var(--navy-ink)',''],['leads','HubSpot leads','var(--orange)',' dot']].map(([k,l,c,d])=>`<button class="chip" id="lg-${k}" data-k="${k}" aria-pressed="${st[k]}"><span class="sw${d}" style="background:${c}"></span>${l}</button>`).join('');
+    document.querySelectorAll('#legend button').forEach(b=>b.onclick=()=>{const k=b.dataset.k;st[k]=!st[k];if(!st.prev&&!st.cur)st[k==='prev'?'cur':'prev']=true;renderTrend()});
+  }
+  function renderChart(){
+    const svg=document.getElementById('chart'),box=document.getElementById('chartBox');
+    while(svg.firstChild)svg.removeChild(svg.firstChild);
+    const W=Math.max(box.clientWidth,600),H=290,m={l:48,r:40,t:30,b:40},iw=W-m.l-m.r,ih=H-m.t-m.b;
+    svg.setAttribute('viewBox',`0 0 ${W} ${H}`);svg.style.minWidth='600px';
+    const vis=x=>x.cur?st.cur:st.prev, k=st.metric;
+    const max=Math.max(10,...M.filter(vis).map(x=>x[k])),step=max>3000?1000:max>1500?500:max>600?250:max>200?50:10,top=Math.ceil(max/step)*step;
+    const y=v=>m.t+ih-(v/top)*ih,y2=v=>m.t+ih-(v/5)*ih,bw=iw/M.length,gap=Math.min(10,bw*.25);
+    for(let v=0;v<=top;v+=step){el(svg,'line',{x1:m.l,x2:W-m.r,y1:y(v),y2:y(v),stroke:'var(--line)'});el(svg,'text',{x:m.l-6,y:y(v)+4,'text-anchor':'end','font-size':11,fill:'var(--muted)'},fmt(v))}
+    if(st.leads)for(let v=0;v<=5;v++)el(svg,'text',{x:W-m.r+8,y:y2(v)+4,'font-size':11,fill:'var(--orange)'},v);
+    const sx=m.l+8*bw;el(svg,'line',{x1:sx,x2:sx,y1:m.t-14,y2:m.t+ih,stroke:'var(--muted)','stroke-dasharray':'4 4'});
+    el(svg,'text',{x:sx-6,y:m.t-18,'text-anchor':'end','font-size':11,fill:'var(--muted)'},'Previous period');
+    el(svg,'text',{x:sx+6,y:m.t-18,'font-size':11,fill:'var(--muted)'},'Current period · new URL Mar 10');
+    const pts=[];
+    M.forEach((x,i)=>{const bx=m.l+i*bw+gap/2,w=bw-gap;
+      if(vis(x)){el(svg,'rect',{x:bx,y:y(x[k]),width:w,height:Math.max(0,y(0)-y(x[k])),fill:x.cur?'var(--navy-ink)':'var(--prev)',rx:2,opacity:x.cur?.9:1});
+        el(svg,'text',{x:bx+w/2,y:y(x[k])-5,'text-anchor':'middle','font-size':10.5,fill:'var(--muted)'},fmt(x[k]))}
+      el(svg,'text',{x:bx+w/2,y:H-22,'text-anchor':'middle','font-size':11,fill:'var(--fg)'},x.m+((i===0||i===15)?'*':''));
+      if(i===0||x.m==='Jan')el(svg,'text',{x:bx+w/2,y:H-8,'text-anchor':'middle','font-size':10.5,fill:'var(--muted)'},x.y);
+      pts.push([bx+w/2,y2(x.hs),x]);
+    });
+    if(st.leads){
+      const seg=(a)=>el(svg,'polyline',{points:a.map(p=>p[0]+','+p[1]).join(' '),fill:'none',stroke:'var(--orange)','stroke-width':2});
+      if(st.prev)seg(pts.slice(0,8)); if(st.cur)seg(pts.slice(8));
+      pts.forEach(([px,py,x])=>{if(!vis(x))return;el(svg,'circle',{cx:px,cy:py,r:x.hs?5:3,fill:'var(--orange)',stroke:'var(--surface)','stroke-width':1.5});
+        if(x.hs)el(svg,'text',{x:px+8,y:py-6,'font-size':11.5,'font-weight':700,fill:'var(--orange)'},x.hs)});
+    }
+    M.forEach((x,i)=>{const hit=el(svg,'rect',{x:m.l+i*bw,y:m.t,width:bw,height:ih,fill:'transparent'});
+      hit.addEventListener('mouseenter',()=>{const tip=document.getElementById('tip');
+        tip.innerHTML=`<b>${x.m} ${x.y}${i===0?' (from Jul 10)':i===15?' (to Oct 20)':''}</b><br>${fmt(x.sessions)} sessions · ${Math.round(x.engaged/x.sessions*100)}% engaged<br>${fmt(x.users)} users · ${fmt(x.views)} views<br>HubSpot leads ${x.hs} · GA4 key event ${x.ga}`;
+        tip.hidden=false;const scale=svg.getBoundingClientRect().width/W;const cx=(m.l+i*bw+bw/2)*scale-box.scrollLeft;
+        tip.style.left=Math.min(Math.max(cx,100),box.clientWidth-100)+'px';tip.style.top=Math.max(y(x[k])*scale-8,70)+'px'});
+      hit.addEventListener('mouseleave',()=>{document.getElementById('tip').hidden=true});
+    });
+  }
+  function renderTrend(){
+    renderControls();
+    const R=M.filter(x=>x.cur?st.cur:st.prev),sum=f=>R.reduce((a,x)=>a+x[f],0),k=st.metric,lab=METRICS.find(m=>m.id===k).label;
+    const both=st.prev&&st.cur;
+    const P=M.filter(x=>!x.cur),C=M.filter(x=>x.cur),s=(A,f)=>A.reduce((a,x)=>a+x[f],0);
+    const items=both?[
+      [lab+' · current',fmt(s(C,k))],[lab+' · previous',fmt(s(P,k))],['Change',((s(C,k)-s(P,k))/s(P,k)*100).toFixed(0)+'%'],
+      ['Leads · current vs previous','11 / 7'],['Sessions per lead','462 / 1,160']]
+     :[[lab,fmt(sum(k))],['Per month',fmt(Math.round(sum(k)/R.length))],['Engagement rate',(sum('engaged')/sum('sessions')*100).toFixed(1)+'%'],
+      ['HubSpot leads',sum('hs')],['Sessions per lead',fmt(Math.round(sum('sessions')/Math.max(1,sum('hs'))))]];
+    document.getElementById('mini').innerHTML=items.map(([a,b])=>`<div><span>${a}</span><b>${b}</b></div>`).join('');
+    renderChart();
+  }
+  renderTrend();
+
+  /* ---------- Page table ---------- */
+  const PG=[['Previous · Jul 10, 2025 – Feb 28, 2026',12992,8121,2507,8055,7867,6.3],['Current · Mar 1 – Oct 20, 2026',6012,5081,1695,4860,4664,7.3]];
+  const row=([l,v,s,e,u,n,t],c)=>{const er=e/s*100;return `<tr${c?' class="hl-o"':''}><td>${l}</td><td>${fmt(v)}</td><td>${fmt(s)}</td><td>${fmt(e)}</td><td>${er.toFixed(1)}%</td><td>${(100-er).toFixed(1)}%</td><td>${fmt(u)}</td><td>${fmt(n)}</td><td>0:${String(Math.round(t)).padStart(2,'0')}</td></tr>`};
+  const pc=(a,b)=>{const v=(b-a)/a*100;return `<span class="${v>=0?'up':'down'}">${v>=0?'+':''}${v.toFixed(1)}%</span>`};
+  document.getElementById('pg-body').innerHTML=row(PG[0])+row(PG[1],1)+
+    `<tr class="total"><td>Change</td><td>${pc(12992,6012)}</td><td>${pc(8121,5081)}</td><td>${pc(2507,1695)}</td><td class="up">+2.5 pts</td><td class="up">−2.5 pts</td><td>${pc(8055,4860)}</td><td>${pc(7867,4664)}</td><td class="up">+1 s</td></tr>`;
+
+  /* ---------- Channels ---------- */
+  const CH=[['Paid Social',7480,4539,1344],['Direct',206,132,48],['Email',127,92,38],['Organic Search',29,33,26],['Organic Social',1,27,20],['AI Assistant',0,5,4],['Other',38,39,12]]
+    .map(([name,p,c,e])=>({name,p,c,e,r:e/c,chg:p?(c-p)/p:Infinity}));
+  function renderTable(){
+    const list=[...CH].sort((a,b)=>(a[st.sortK]>b[st.sortK]?1:-1)*st.sortDir);
+    document.querySelector('#chTable tbody').innerHTML=list.map(c=>{
+      const pl=c.r>=.7?'p-good':c.r>=.4?'p-warn':'p-bad';
+      const ch=c.p?`<span class="d ${c.chg>=0?'up':'down'}">${c.chg>=0?'+':''}${Math.round(c.chg*100)}%</span>`:'<span class="d up">New</span>';
+      return `<tr${c.name==='Paid Social'?' class="hl-o"':''}><td>${c.name}</td><td>${fmt(c.p)}</td><td>${fmt(c.c)}</td><td>${ch}</td><td><span class="pill ${pl}">${Math.round(c.r*100)}%</span></td></tr>`}).join('')
+      +`<tr class="total"><td>Total</td><td>7,881</td><td>4,867</td><td><span class="d down">−38%</span></td><td>31%</td></tr>`;
+    document.querySelectorAll('#chTable th').forEach(th=>{th.textContent=th.textContent.replace(/ [▲▼]$/,'');if(th.dataset.k===st.sortK)th.textContent+=st.sortDir<0?' ▼':' ▲';
+      th.onclick=()=>{const k=th.dataset.k;if(k===st.sortK)st.sortDir*=-1;else{st.sortK=k;st.sortDir=k==='name'?1:-1}renderTable()}});
+  }
+  renderTable();
+  function renderChannels(){
+    const svg=document.getElementById('ch-channels');while(svg.firstChild)svg.removeChild(svg.firstChild);
+    const D=CH.filter(c=>st.ps||c.name!=='Paid Social'),rowH=40,L=118,R=470,T=6,W=520,Hh=T+rowH*D.length+22;
+    svg.setAttribute('viewBox',`0 0 ${W} ${Hh}`);
+    const max=st.ps?8000:250,stp=st.ps?2000:50,x=v=>L+(v/max)*(R-L);
+    for(let v=0;v<=max;v+=stp){el(svg,'line',{x1:x(v),x2:x(v),y1:T,y2:T+rowH*D.length,stroke:'var(--line)'});el(svg,'text',{x:x(v),y:T+rowH*D.length+15,'text-anchor':'middle','font-size':10.5,fill:'var(--muted)'},fmt(v))}
+    D.forEach((c,i)=>{const yy=T+rowH*i;
+      el(svg,'text',{x:L-8,y:yy+rowH/2+4,'text-anchor':'end','font-size':12,fill:'var(--fg)'},c.name);
+      [[c.p,'var(--prev)',5],[c.c,'var(--navy-ink)',20]].forEach(([v,f,o])=>{
+        el(svg,'rect',{x:L,y:yy+o,width:Math.max(1.5,x(v)-L),height:13,fill:f,rx:2});
+        el(svg,'text',{x:x(v)+5,y:yy+o+11,'font-size':11,fill:'var(--fg)'},fmt(v))})});
+    const b=document.getElementById('psToggle');b.setAttribute('aria-pressed',st.ps);
+  }
+  document.getElementById('psToggle').onclick=()=>{st.ps=!st.ps;renderChannels()};
+  renderChannels();
+
+  /* ---------- Reconciliation chart ---------- */
+  (function(){
+    const svg=document.getElementById('recon'),W=520,H=230,m={l:28,r:8,t:16,b:40},iw=W-m.l-m.r,ih=H-m.t-m.b;
+    svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+    const y=v=>m.t+ih-(v/4)*ih,bw=iw/M.length;
+    for(let v=0;v<=4;v++){el(svg,'line',{x1:m.l,x2:W-m.r,y1:y(v),y2:y(v),stroke:'var(--line)'});el(svg,'text',{x:m.l-6,y:y(v)+4,'text-anchor':'end','font-size':10.5,fill:'var(--muted)'},v)}
+    const sx=m.l+8*bw;el(svg,'line',{x1:sx,x2:sx,y1:m.t,y2:m.t+ih,stroke:'var(--muted)','stroke-dasharray':'4 4'});
+    M.forEach((x,i)=>{const bx=m.l+i*bw,w=(bw-6)/2;
+      [[x.ga,'var(--prev)',3],[x.hs,'var(--orange)',3+w]].forEach(([v,f,o])=>{if(v)el(svg,'rect',{x:bx+o,y:y(v),width:w,height:y(0)-y(v),fill:f,rx:1.5})});
+      if(i===6){el(svg,'text',{x:bx+bw/2,y:y(4)-4,'text-anchor':'middle','font-size':10.5,'font-weight':700,fill:'var(--bad)'},'4 vs 2')}
+      el(svg,'text',{x:bx+bw/2,y:H-24,'text-anchor':'middle','font-size':10,fill:'var(--fg)'},x.m[0]+x.m.slice(1,3));
+      if(i===0||x.m==='Jan')el(svg,'text',{x:bx+bw/2,y:H-10,'text-anchor':'middle','font-size':10,fill:'var(--muted)'},x.y)});
+  })();
+
+  /* ---------- Sources ---------- */
+  const SRC=[['Organic search',4,2],['AI referral (ChatGPT)',2,0],['Direct',2,1],['Offline · email / integration',2,3],['Campaign UTM',1,0],['Referral',0,1]];
+  document.getElementById('src').innerHTML=SRC.map(([l,c,p])=>`<div class="cta-row" style="margin-bottom:8px"><span>${l}</span><b>${c} <small>/ ${p}</small></b><span class="track"><span class="fill" style="width:${c/11*100}%"></span></span><span class="track" style="height:6px"><span class="fill p" style="width:${p/11*100}%"></span></span></div>`).join('');
+
+  /* ---------- Lead list ---------- */
+  const LEADS={cur:[
+    ['Apr 19, 2026','Smith+Nephew','biz','Organic search','Google'],
+    ['Apr 24, 2026','Tesla','biz','Organic search','Google'],
+    ['Jun 18, 2026','—','per','Organic search','Repeat contact, 5 forms over time'],
+    ['Jul 8, 2026','—','per','Organic search','Also sent the apprenticeship form'],
+    ['Aug 10, 2026','—','per','Campaign UTM','“corporate campaign”'],
+    ['Aug 24, 2026','WJE','biz','Offline · email','Latest source: marketing email'],
+    ['Sep 6, 2026','Pearse Bertram','biz','AI referral','chatgpt.com'],
+    ['Sep 18, 2026','—','per','Direct','Latest source “corporate campaign”; submitted twice'],
+    ['Sep 29, 2026','Origin Engineering','biz','Offline · email','Then contacted the sales team'],
+    ['Oct 6, 2026','Florence Copper','biz','AI referral','chatgpt.com'],
+    ['Oct 7, 2026','Komatsu','biz','Direct','Arrived from the CWI seminar page']],
+   prev:[
+    ['Sep 25, 2025','JN-MW','biz','Direct','Arrived from the CWI page'],
+    ['Nov 5, 2025','Munich IA (UK)','biz','Offline · integration','Existing contact'],
+    ['Dec 9, 2025','Western Technical College','biz','Organic search','Google'],
+    ['Jan 13, 2026','UDX','biz','Organic search','Google'],
+    ['Jan 13, 2026','Spark Building Group','biz','Referral','Latest source: marketing email'],
+    ['Feb 19, 2026','—','per','Offline · import','Existing contact (China)'],
+    ['Feb 19, 2026','Fisher Tank','biz','Offline · import','Latest source: training email']]};
+  function renderLeads(){
+    document.getElementById('periods').innerHTML=[['cur','Current · 11'],['prev','Previous · 7']].map(([k,l])=>`<button class="chip" id="pd-${k}" data-k="${k}" aria-pressed="${st.period===k}">${l}</button>`).join('');
+    document.querySelectorAll('#periods button').forEach(b=>b.onclick=()=>{st.period=b.dataset.k;renderLeads()});
+    document.getElementById('lt').textContent=st.period==='cur'?'Submissions · Custom Seminars form':'Submissions · Custom Seminar Inquiry form (old page)';
+    document.getElementById('leads').innerHTML=LEADS[st.period].map(r=>`<tr><td>${r[0]}</td><td class="l">${r[1]}</td><td class="l"><span class="pill ${r[2]==='biz'?'p-good':'p-warn'}">${r[2]==='biz'?'Business':'Personal'}</span></td><td class="l">${r[3]}</td><td class="l wrapc">${r[4]}</td></tr>`).join('');
+  }
+  renderLeads();
+
+  let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(renderChart,120)});
+})();
+</script>
+
+</body></html>
